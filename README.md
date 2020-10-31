@@ -3,6 +3,6 @@
 ## 1. Introduction
 
 This repository contains my SWE 573 project. 
-The repository will be updated frequently. 
+It will be updated frequently. 
 
 Details will soon be posted here...
