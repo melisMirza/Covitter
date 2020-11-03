@@ -1,6 +1,6 @@
 # SWE573 Project
 
-## 1. Introduction
+## Introduction
 
 This repository contains my SWE 573 project. 
 It will be updated frequently. 
