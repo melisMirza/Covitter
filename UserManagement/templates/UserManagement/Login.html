@@ -1,0 +1,25 @@
+{% extends 'UserManagement/Base.html' %}
+
+{% block content%}
+
+<div style="margin:auto">
+    <div class="row align-items-center justify-content-center mb-2">
+        <h1 class="simple-text logo-normal"> 
+            <br> 
+            Login 
+        </h1>
+    </div>
+
+    <div class="row align-items-center justify-content-center">
+        <form method="POST" >
+            <br>
+            {% csrf_token %}   
+            {% for field in form %}
+                {{ field|linebreaks}}
+            {% endfor %}
+            <br>
+            <button type="submit" style="width: 200px;" name="save" class="btn btn-secondary" method ="post" action="Login.html">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

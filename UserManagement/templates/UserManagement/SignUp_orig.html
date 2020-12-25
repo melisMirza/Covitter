@@ -1,0 +1,11 @@
+{% extends 'UserManagement/home.html' %}
+
+{% block title %} Sign Up! {% endblock %}
+
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button type="submit" name="save" class="btn btn-secondary">Create User</button>
+</form>
+{% endblock %}
