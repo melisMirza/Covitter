@@ -1,0 +1,50 @@
+{% extends 'main/Layout.html' %}
+
+{% block sidebar%}
+<div class="sidebar-wrapper">
+    <ul class="nav">
+      <li class="nav-item ">
+        <a class="nav-link" href="/analytics">
+          <i class="material-icons">dashboard</i>
+          <p>This Week</p>
+        </a>
+      </li>
+      <li class="nav-item ">
+        <a class="nav-link" onclick="location.href = '/analytics/datesearch'">
+          <i class="material-icons">date_range</i>
+          <p>Search In Time</p>
+        </a>
+      </li>
+      <li class="nav-item active ">
+        <a class="nav-link" onclick="location.href = '/analytics/wordsearch'">
+          <i class="material-icons">search</i>
+          <p>Search For Words</p>
+        </a>
+      </li>
+      <li class="nav-item ">
+        <a class="nav-link" onclick="location.href = '/analytics/account'">
+          <i class="material-icons">person_outline</i>
+          <p>Account</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+{% endblock %}
+
+{% block content%}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-xl-4 col-lg-12">
+            <br>
+            <br> 
+            <div class="input-group no-border">
+                <input type="text" value="" class="form-control" placeholder="Search...">
+                <button type="submit" class="btn btn-default btn-round btn-just-icon">
+                  <i class="material-icons">search</i>
+                  <div class="ripple-container"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

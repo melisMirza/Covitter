@@ -52,3 +52,4 @@ class SignUpForm(forms.Form):
 class LoginForm(forms.Form):
     userInfo = forms.CharField(max_length=50,required=True, label=False,widget= forms.TextInput(attrs={'placeholder':'User Name', 'style': 'text-align: center; border-radius: 10px;font-style: italic;'}))#,label="User Name")
     password = forms.CharField(max_length=32,required=True,widget= forms.PasswordInput(attrs={'placeholder':'Password', 'style': 'text-align: center; border-radius: 10px; font-style: italic;'}), label=False) #,label="Password"
+

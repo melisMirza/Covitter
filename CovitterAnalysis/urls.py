@@ -18,9 +18,12 @@ from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
 from UserManagement import views as umv
+from main import views as mv
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', umv.home, name="welcome"),
     path('user/', include("UserManagement.urls")),
+    path('analytics/', include("main.urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

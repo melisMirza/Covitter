@@ -1,0 +1,1 @@
+"python" "C:/Users/melis/Desktop/Dersler/Semester 2/SWE 573/TwitterAnalyzer/Stream2DB.py"
