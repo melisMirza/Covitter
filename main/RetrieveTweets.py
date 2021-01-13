@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import json, collections
+import json, collections, os
 from http.client import HTTPSConnection
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -17,9 +17,10 @@ from datetime import datetime
 from datetime import timedelta
 from .Tweet import Tweet
 import environ
+''' % LOCAL TESTS%
 env = environ.Env()
 environ.Env.read_env()
-
+'''
 
 def listToDbString(inputList):
     if len(inputList) == 0:
@@ -50,7 +51,9 @@ def config(section,filename="database.ini"):
     return db
 
 def checkDbForDate(startDate,endDate):
-    params = {"host":env("POSTGRES_HOST"), "database":env("POSTGRES_DATABASE"),"user": env("POSTGRES_USER"),"password":env("POSTGRES_PASSWORD")} #config('posts')
+    params = {"host":os.environ['POSTGRES_HOST'], "database":os.environ['POSTGRES_DATABASE'],"user": os.environ['POSTGRES_USER'],"password":os.environ['POSTGRES_PASSWORD']} #config('posts')
+    #params = {"host":env("POSTGRES_HOST"), "database":env("POSTGRES_DATABASE"),"user": env("POSTGRES_USER"),"password":env("POSTGRES_PASSWORD")} #config('posts')
+    
     dbconn = psycopg2.connect(**params)
     cur = dbconn.cursor()
 
@@ -84,7 +87,8 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     '''
 
     ##Get tweets from DB
-    params = {"host":env("POSTGRES_HOST"), "database":env("POSTGRES_DATABASE"),"user": env("POSTGRES_USER"),"password":env("POSTGRES_PASSWORD")}
+    #params = {"host":env("POSTGRES_HOST"), "database":env("POSTGRES_DATABASE"),"user": env("POSTGRES_USER"),"password":env("POSTGRES_PASSWORD")}
+    params = {"host":os.environ['POSTGRES_HOST'], "database":os.environ['POSTGRES_DATABASE'],"user": os.environ['POSTGRES_USER'],"password":os.environ['POSTGRES_PASSWORD']} #config('posts')
     dbconn = psycopg2.connect(**params)
     cur = dbconn.cursor()
     
@@ -153,11 +157,17 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     return tweetDF
 
 def getTweetsFromPast(fromDate,toDate):
+    ''' % LOCAL TESTS
     API_Key = env("TWIITER_API_KEY")
     API_Secret_Key = env("TWIITER_API_SECRET_KEY")
     Access_Token = env("TWIITER_ACCESS_TOKEN")
     Access_Token_Secret = env("TWIITER_ACCESS_TOKEN_SECRET")
-
+    '''
+    API_Key = os.environ['TWIITER_API_KEY']
+    API_Secret_Key = os.environ['TWIITER_API_SECRET_KEY']
+    Access_Token = os.environ['TWIITER_ACCESS_TOKEN']
+    Access_Token_Secret = os.environ['TWIITER_ACCESS_TOKEN_SECRET']
+    
     #Authenticate
     auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)
     auth.set_access_token(Access_Token, Access_Token_Secret)
@@ -230,7 +240,8 @@ def getTweetsFromPast(fromDate,toDate):
 def preparePastTweets(tweets):
     dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"entities":[]}
     print(os.getcwd())
-    tagme.GCUBE_TOKEN = env("TAGME_TOKEN")
+    #tagme.GCUBE_TOKEN = env("TAGME_TOKEN")
+    tagme.GCUBE_TOKEN = os.environ['TAGME_TOKEN']
 
     stopwords = Cleaner.getCustomStopwords(reference="custom", filename="main\CustomStopwords.txt")
     for tweet in tweets:

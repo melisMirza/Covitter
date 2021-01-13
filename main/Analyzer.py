@@ -14,9 +14,10 @@ from textblob import TextBlob
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import tagme
 import environ
+''' % LOCAL TEST %
 env = environ.Env()
 environ.Env.read_env()
-
+'''
 def lemmatization(text):
     nltk.download('wordnet')
     nltk.download('averaged_perceptron_tagger')
@@ -51,7 +52,9 @@ def getSentimentResult(sentiment_score):
     return sentiment
 
 def getEntities(text,input_type="text"):
-    tagme.GCUBE_TOKEN = env("TAGME_TOKEN")
+    #tagme.GCUBE_TOKEN = env("TAGME_TOKEN")
+    tagme.GCUBE_TOKEN = os.environ['TAGME_TOKEN']
+
     entities = []
     limit = 0.125
 
