@@ -77,6 +77,7 @@ WSGI_APPLICATION = 'CovitterAnalysis.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -88,14 +89,13 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
+        'NAME': env('POSTGRES_USER_DB_NAME'),
+        'USER': env('POSTGRES_USER_DB_USER'),
+        'PASSWORD': env('POSTGRES_USER_DB_PASSWORD'),
+        'HOST': env('POSTGRES_USER_DB_HOST'),
         'PORT': 5432,
     }
 }
-'''
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
