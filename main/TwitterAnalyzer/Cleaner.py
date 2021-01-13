@@ -5,7 +5,7 @@ from tweepy import Stream
 import string, nltk,re, emot
 from nltk.corpus import stopwords as ntStop
 from wordcloud import STOPWORDS as wcStop
-from spellchecker import SpellChecker
+#from spellchecker import SpellChecker
 from textblob import TextBlob
 from emot.emo_unicode import UNICODE_EMO, EMOTICONS
 
@@ -64,7 +64,7 @@ def cleanURL(text):
 def removeNonUtf8(text):
     text = bytes(text, 'utf-8').decode('utf-8', 'ignore')
     return text
-
+'''
 def correctSpellings(text):
     spell = SpellChecker()  
     corrected_text = []
@@ -75,7 +75,7 @@ def correctSpellings(text):
         else:
             corrected_text.append(word)
     return " ".join(corrected_text)
-
+'''
 def removePunctuation(text):
     translator = str.maketrans(string.punctuation, ' '*len(string.punctuation))
     text = text.translate(translator)

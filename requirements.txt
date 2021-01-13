@@ -7,7 +7,6 @@ nltk
 wordcloud
 textblob
 emot
-spellchecker
 tagme
 requests
 networkx

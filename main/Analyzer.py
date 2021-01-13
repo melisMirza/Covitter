@@ -5,7 +5,6 @@ from tweepy import Stream
 import string, nltk,re, emot
 from nltk.corpus import stopwords as ntStop
 from wordcloud import STOPWORDS as wcStop
-from spellchecker import SpellChecker
 from textblob import TextBlob
 from emot.emo_unicode import UNICODE_EMO, EMOTICONS
 from nltk.stem import WordNetLemmatizer
