@@ -11,7 +11,7 @@ tagme
 requests
 networkx
 matplotlib
-newsapi
+newsapi=0.1.1
 numpy
 configparser
 snscrape
