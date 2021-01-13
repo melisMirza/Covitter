@@ -13,7 +13,6 @@ requests
 networkx
 matplotlib
 newsapi
-collections
 numpy
 configparser
 snscrape
