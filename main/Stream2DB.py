@@ -53,13 +53,13 @@ class Listener(StreamListener):
         hashtags = status.entities["hashtags"]
         pm = []; ht = []
         for m in mentions:
-            if m["name"].strip() == ascii(m["name"]):
-                print("appending",m["name"])
-                pm.append(m["name"])
+            #if m["name"].strip() == ascii(m["name"]):
+            #print("appending",m["name"])
+            pm.append(m["name"])
         for h in hashtags:
-            if h["text"].strip() == ascii(h["text"]):
-                print("appending",h["text"])
-                ht.append(h["text"])
+            #if h["text"].strip() == ascii(h["text"]):
+            #print("appending",h["text"])
+            ht.append(h["text"])
 
         tweet = Tweet(text,status.id_str,status.user.screen_name,status.created_at,ht,pm,status.favorite_count,status.retweet_count,rt)   
         tweets.append(tweet)
