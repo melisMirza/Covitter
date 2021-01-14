@@ -109,7 +109,7 @@ finally:
 #conn = psycopg2.connect(**params)
 conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
 cur = conn.cursor()
-stopwords = Cleaner.getCustomStopwords(reference="custom", filename="main\CustomStopwords.txt")
+stopwords = Cleaner.getCustomStopwords(reference="custom", filename="CustomStopwords.txt")
 for post in tweets:
     p_text_orig = post.text
     print(post.text)
