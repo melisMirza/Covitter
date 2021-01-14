@@ -9,7 +9,7 @@ from nltk.corpus import stopwords as ntStop
 from wordcloud import STOPWORDS as wcStop
 from textblob import TextBlob
 from emot.emo_unicode import UNICODE_EMO, EMOTICONS
-from . import Cleaner, Analyzer
+import Cleaner, Analyzer
 from Tweet import Tweet
 
 def config(section,filename='database.ini'):
