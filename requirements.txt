@@ -15,3 +15,4 @@ newsapi-python
 numpy
 configparser
 snscrape
+dj_database_url

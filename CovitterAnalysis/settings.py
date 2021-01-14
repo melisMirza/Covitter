@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 import environ
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -91,6 +92,9 @@ DATABASES = {
     }
 }
 
+# SWITCHED TO HEROKU POSTGRES DB
+heroku_db = dj_database_url.config()
+DATABASES['default'].update(heroku_db)
 '''
 DATABASES = {
     'default': {
