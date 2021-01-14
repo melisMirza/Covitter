@@ -7,7 +7,6 @@ from tweepy import Stream
 import string, nltk,re, emot,tagme
 from nltk.corpus import stopwords as ntStop
 from wordcloud import STOPWORDS as wcStop
-from spellchecker import SpellChecker
 from textblob import TextBlob
 from emot.emo_unicode import UNICODE_EMO, EMOTICONS
 from . import Cleaner, Analyzer
@@ -108,7 +107,7 @@ finally:
 #conn = psycopg2.connect(**params)
 conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
 cur = conn.cursor()
-stopwords = Cleaner.getCustomStopwords(reference="custom", filename="CustomStopwords.txt")
+stopwords = Cleaner.getCustomStopwords(reference="custom", filename="main\CustomStopwords.txt")
 for post in tweets:
     p_text_orig = post.text
     p_text_orig = p_text_orig.replace('\'','\'\'')
