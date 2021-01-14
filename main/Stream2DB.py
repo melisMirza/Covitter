@@ -52,9 +52,11 @@ class Listener(StreamListener):
         hashtags = status.entities["hashtags"]
         pm = []; ht = []
         for m in mentions:
+            print("m[name]:",m["name"],":",type(m["name"]))
             if m["name"].isascii():
                 pm.append(m["name"])
         for h in hashtags:
+            print("h[text]:",h["text"],":",type(h["text"]))
             if h["text"].isascii():
                 ht.append(h["text"])
 
@@ -110,12 +112,14 @@ cur = conn.cursor()
 stopwords = Cleaner.getCustomStopwords(reference="custom", filename="main\CustomStopwords.txt")
 for post in tweets:
     p_text_orig = post.text
+    print(post.text)
     p_text_orig = p_text_orig.replace('\'','\'\'')
     p_date = post.post_date
     p_mentions = listToDbString(post.mentions)
     p_hashtags = listToDbString(post.hashtags)
 
     #Clean Tweet
+    print("cleaning")
     p_text_clean = Cleaner.standardize(post.text)
     p_text_clean = Cleaner.removeHastags(p_text_clean)
     p_text_clean = Cleaner.removeMentions(p_text_clean)
@@ -128,11 +132,13 @@ for post in tweets:
     p_text_clean = Cleaner.removeStopwords(p_text_clean,stopwords)
 
     #Analyze
+    print("analyzing")
     p_text_lemmatized = Analyzer.lemmatization(p_text_clean)
     sentiment_score = Analyzer.analyzeSentiment(p_text_lemmatized,tool="vader")
     sentiment_result = Analyzer.getSentimentResult(sentiment_score)
 
     #ENTITIES
+    print("entities")
     entities = []
     tags = tagme.annotate(p_fortag)
     for t in tags.get_annotations(0.125):
