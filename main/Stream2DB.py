@@ -53,11 +53,11 @@ class Listener(StreamListener):
         pm = []; ht = []
         for m in mentions:
             print("m[name]:",m["name"],":",type(m["name"]))
-            if m["name"].isascii():
+            if m["name"].strip() == ascii(m["name"]):
                 pm.append(m["name"])
         for h in hashtags:
             print("h[text]:",h["text"],":",type(h["text"]))
-            if h["text"].isascii():
+            if h["text"].strip() == ascii(h["text"]):
                 ht.append(h["text"])
 
         tweet = Tweet(text,status.id_str,status.user.screen_name,status.created_at,ht,pm,status.favorite_count,status.retweet_count,rt)   
