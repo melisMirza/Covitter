@@ -53,12 +53,12 @@ class Listener(StreamListener):
         hashtags = status.entities["hashtags"]
         pm = []; ht = []
         for m in mentions:
-            print("m[name]:",m["name"],":",type(m["name"]))
             if m["name"].strip() == ascii(m["name"]):
+                print("appending",m["name"])
                 pm.append(m["name"])
         for h in hashtags:
-            print("h[text]:",h["text"],":",type(h["text"]))
             if h["text"].strip() == ascii(h["text"]):
+                print("appending",h["text"])
                 ht.append(h["text"])
 
         tweet = Tweet(text,status.id_str,status.user.screen_name,status.created_at,ht,pm,status.favorite_count,status.retweet_count,rt)   
@@ -129,7 +129,8 @@ for post in tweets:
     p_text_clean = Cleaner.removeHastags(p_text_clean)
     p_text_clean = Cleaner.removeMentions(p_text_clean)
     p_text_clean = Cleaner.cleanURL(p_text_clean)
-    p_text_clean = Cleaner.convertAbbreviations(p_text_clean)
+    abbr_file = base + "/Abbreviations.txt"
+    p_text_clean = Cleaner.convertAbbreviations(p_text_clean,filename=abbr_file)
     p_fortag = p_text_clean
     p_text_clean = Cleaner.removePunctuation(p_text_clean)
     (p_text_clean, p_text_clean_wo_emojis, p_emojis) = Cleaner.convertEmojis(p_text_clean)

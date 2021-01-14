@@ -28,7 +28,7 @@ def getCustomStopwords(reference,filename=""):
         pass
     return stopwords
 
-def getAbbreviations(filename = "main\Abbreviations.txt"):
+def getAbbreviations(filename):
     abbDict = {}
 
     with open(filename, 'r+') as ab:
@@ -112,8 +112,8 @@ def convertEmojis(text):
         text_wo_emotion = text.replace(emotion," ")
     return (text, text_wo_emotion,emotList)
 
-def convertAbbreviations(text):
-    abbDict = getAbbreviations()
+def convertAbbreviations(text,filename="main\Abbreviations.txt"):
+    abbDict = getAbbreviations(filename)
     text_converted = []
     for word in str(text).split():
         if word in abbDict.keys():
