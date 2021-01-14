@@ -10,7 +10,7 @@ from wordcloud import STOPWORDS as wcStop
 from spellchecker import SpellChecker
 from textblob import TextBlob
 from emot.emo_unicode import UNICODE_EMO, EMOTICONS
-import Cleaner, Analyzer
+from . import Cleaner, Analyzer
 from Tweet import Tweet
 
 def config(section,filename='database.ini'):
@@ -79,12 +79,11 @@ def listToDbString(inputList):
         dbString = "\'" + dbString + "\'"
     return dbString
 
-API_Key = "WNmf8Sn7lxTnv8DXXETH2rMt3"
-API_Secret_Key = "si9nsqctwXlrkCISATa9Tb4Rz8n50WneRIlrpvz710d9SPhI2p"
-Bearer_Token = "AAAAAAAAAAAAAAAAAAAAAEvlJgEAAAAATlgz0sdbprRgHkkU%2B0hVrF1jAKE%3DhX8F3CD6SxXBITywP9TbAYMjABQMLOnZfb7HUlWoa1jNVG5gBq"
-Access_Token = "251584559-knqwY4QZn8G6qmVUba2P9yJJ0aOhRPPMQj5yjjra"
-Access_Token_Secret = "lS2FkFXPLdmKMToCDY2BrLHOh6d3cJJVk0OUYjkgBxLjS"
-tagme.GCUBE_TOKEN = "24d4b5ec-ce55-4be2-a530-75f1d03fbc76-843339462"
+API_Key = os.environ['TWIITER_API_KEY']
+API_Secret_Key = os.environ['TWIITER_API_SECRET_KEY']
+Access_Token = os.environ['TWIITER_ACCESS_TOKEN']
+Access_Token_Secret = os.environ['TWIITER_ACCESS_TOKEN_SECRET']
+tagme.GCUBE_TOKEN = os.environ['TAGME_TOKEN']
 #Authenticate
 auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)
 auth.set_access_token(Access_Token, Access_Token_Secret)
@@ -105,8 +104,9 @@ finally:
 
 
 ##DB CONNECTIONS
-params = config('posts')
-conn = psycopg2.connect(**params)
+#params = config('posts')
+#conn = psycopg2.connect(**params)
+conn = psycopg2.connect(os.environ['DATABASE_URL'])
 cur = conn.cursor()
 stopwords = Cleaner.getCustomStopwords(reference="custom", filename="CustomStopwords.txt")
 for post in tweets:
