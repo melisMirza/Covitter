@@ -11,6 +11,7 @@ from textblob import TextBlob
 from emot.emo_unicode import UNICODE_EMO, EMOTICONS
 import Cleaner, Analyzer
 from Tweet import Tweet
+from pathlib import Path
 
 def config(section,filename='database.ini'):
     # create a parser
@@ -109,7 +110,11 @@ finally:
 #conn = psycopg2.connect(**params)
 conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
 cur = conn.cursor()
-stopwords = Cleaner.getCustomStopwords(reference="custom", filename="CustomStopwords.txt")
+BASE_DIR = Path(__file__).resolve().parent.parent
+base = os.path.join(BASE_DIR, 'main')
+print(base)
+filename = base+"/CustomStopwords.txt"
+stopwords = Cleaner.getCustomStopwords(reference="custom", filename=filename)
 for post in tweets:
     p_text_orig = post.text
     print(post.text)
