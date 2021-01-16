@@ -109,7 +109,7 @@ finally:
 ##DB CONNECTIONS
 #params = config('posts')
 #conn = psycopg2.connect(**params)
-conn = psycopg2.connect(os.environ['HEROKU_POSTGRESQL_AMBER_URL'],sslmode='require')
+conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
 cur = conn.cursor()
 BASE_DIR = Path(__file__).resolve().parent.parent
 base = os.path.join(BASE_DIR, 'main')
