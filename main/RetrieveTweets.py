@@ -340,14 +340,14 @@ def getSentimentResults(tweets):
     '''
     sentiment_dict = {}
     sentiment_df = tweets[["date", "sentiment"]]
-    sentiments = [['Date', 'Positive', 'Neutral', 'Negative']]
+    sentiments = [['Date', 'Very Positive','Positive', 'Neutral', 'Negative','Very Negative']]
     dates = list(set(sentiment_df["date"]))
     dates.sort()
     for d in dates:
-        sentiment_dict[d] = {"Positive":0,"Negative":0,"Neutral":0}
+        sentiment_dict[d] = {"Very_Positive":0,"Positive":0,"Negative":0,"Neutral":0,"Very_Negative":0,}
     for i in range(len(sentiment_df.index)):
         sentiment_dict[tweets["date"][i]][tweets["sentiment"][i]] += 1
     for d in dates:
-        total = sentiment_dict[d]["Positive"] + sentiment_dict[d]["Neutral"] + sentiment_dict[d]["Negative"]
-        sentiments.append([str(d), (sentiment_dict[d]["Positive"]/total)*100,(sentiment_dict[d]["Neutral"]/total)*100,(sentiment_dict[d]["Negative"]/total)*100])
+        total = sentiment_dict[d]["Very_Positive"] + sentiment_dict[d]["Positive"] + sentiment_dict[d]["Neutral"] + sentiment_dict[d]["Negative"]+ sentiment_dict[d]["Very_Negative"]
+        sentiments.append([str(d), (sentiment_dict[d]["Very_Positive"]/total)*100, (sentiment_dict[d]["Positive"]/total)*100,(sentiment_dict[d]["Neutral"]/total)*100,(sentiment_dict[d]["Negative"]/total)*100,(sentiment_dict[d]["Very_Negative"]/total)*100])
     return sentiments

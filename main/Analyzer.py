@@ -41,10 +41,14 @@ def analyzeSentiment(text,tool):
 
 def getSentimentResult(sentiment_score):
     
-    if sentiment_score >= 0.25:
+    if sentiment_score >= 0.25 and sentiment_score < 0.75:
         sentiment = "Positive"
-    elif sentiment_score <= -0.25:
+    elif sentiment_score >= 0.75:
+        sentiment = "Very Positive"
+    elif sentiment_score <= -0.25 and sentiment_score > -0.75:
         sentiment = "Negative"
+    elif sentiment_score <= -0.75:
+        sentiment = "Very Negative"
     else:
         sentiment = "Neutral"
     
