@@ -163,7 +163,7 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=admin123
 '''
 
-
+'''
 #Authenticate
 auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)
 auth.set_access_token(Access_Token, Access_Token_Secret)
@@ -216,3 +216,4 @@ for tweet in output:
     conn.commit() 
     print("\n")
 cur.close()
+'''
