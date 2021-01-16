@@ -55,7 +55,7 @@ def checkDbForDate(startDate,endDate):
     #params = {"host":env("POSTGRES_HOST"), "database":env("POSTGRES_DATABASE"),"user": env("POSTGRES_USER"),"password":env("POSTGRES_PASSWORD")} #config('posts')
     #dbconn = psycopg2.connect(**params)
     
-    dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
+    dbconn = psycopg2.connect(os.environ['HEROKU_POSTGRESQL_AMBER_URL'],sslmode='require')
     cur = dbconn.cursor()
 
     #query = 'SELECT DISTINCT(\"TWITTER\".\"POST_DATE\") FROM \"STREAMED_DATA\".\"TWITTER\"'
@@ -92,7 +92,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     #params = {"host":env("POSTGRES_HOST"), "database":env("POSTGRES_DATABASE"),"user": env("POSTGRES_USER"),"password":env("POSTGRES_PASSWORD")}
     #params = {"host":os.environ['POSTGRES_HOST'], "database":os.environ['POSTGRES_DATABASE'],"user": os.environ['POSTGRES_USER'],"password":os.environ['POSTGRES_PASSWORD']} #config('posts')
     #dbconn = psycopg2.connect(**params)
-    dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
+    dbconn = psycopg2.connect(os.environ['HEROKU_POSTGRESQL_AMBER_URL'],sslmode='require')
     cur = dbconn.cursor()
     
     if option.lower() == "all":

@@ -93,8 +93,10 @@ DATABASES = {
 }
 
 # SWITCHED TO HEROKU POSTGRES DB
-heroku_db = dj_database_url.config()
-DATABASES['default'].update(heroku_db)
+#heroku_db = dj_database_url.config()
+#DATABASES['default'].update(heroku_db)
+DATABASES['default'].update(os.environ["HEROKU_POSTGRESQL_AMBER_URL"])
+
 '''
 DATABASES = {
     'default': {
