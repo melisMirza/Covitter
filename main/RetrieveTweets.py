@@ -143,6 +143,8 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
             output = []
             end_date = fromDate
             while end_date != toDate:
+                print("end:",end_date)
+                print("todate:",toDate)
                 query_end = datetime.strptime(end_date,"%Y-%m-%d")
                 query_start = query_end + timedelta(days=1)
                 query_start_str = query_start.strftime("%Y-%m-%d")
