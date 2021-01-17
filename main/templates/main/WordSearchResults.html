@@ -145,13 +145,13 @@
           </div>
         </div>
       </div>
-    </div>
+    
     <div class="row justify-content-center">
       <div class="col-lg-11 col-md-12">
         <div class="card">
           <div class="card-header card-header-primary">
             <h4 class="card-title">Sentiments</h4>
-            <p class="card-category">Daily Percentage For The Most Recent 1000 Posts</p>
+            <p class="card-category">Daily Percentage For The Most Recent {{ post_data.count }} Posts</p>
           </div>
           <div class="card-body table-responsive">
             <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -193,7 +193,7 @@
         <div class="card">
           <div class="card-header card-header-info">
             <h4 class="card-title">Tweets</h4>
-            <p class="card-category">Most Recent 1000 Posts</p>
+            <p class="card-category">Most Recent {{ post_data.count }} Posts</p>
           </div>
           <div class="card-body table-responsive">
             <table class="table table-hover">
@@ -219,5 +219,6 @@
         </div>
       </div>
     </div>
+  </div>
 </div>
 {% endblock %}
