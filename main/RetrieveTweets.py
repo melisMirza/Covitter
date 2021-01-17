@@ -142,7 +142,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
             print("daylimit:",daylimit)
             output = []
             end_date = toDate
-            while end_date != fromDate:
+            while end_date > fromDate:
                 print("end:",end_date)
                 print("todate:",toDate)
                 query_end = datetime.strptime(end_date,"%Y-%m-%d")
