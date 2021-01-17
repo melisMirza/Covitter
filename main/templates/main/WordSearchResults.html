@@ -64,15 +64,15 @@
               google.charts.load('current', {'packages':['bar']});
               google.charts.setOnLoadCallback(drawChart);
               function drawChart() {
-                var input_data = JSON.parse("{{entities|escapejs}}");
-                var data = google.visualization.arrayToDataTable(input_data);
+                var input_data_ent = JSON.parse("{{entities|escapejs}}");
+                var data = google.visualization.arrayToDataTable(input_data_ent);
                 var options = {
                   chartArea:{
                     backgroundColor:"transparent"
                   },
                   axes: {
                     y: {
-                      0: { side: 'left', label: 'Percentage'} // Top x-axis.
+                      0: { side: 'left', label: 'Entities'} // Top x-axis.
                     }
                   },
                   bars: 'horizontal', // Required for Material Bar Charts.
