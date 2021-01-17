@@ -1,5 +1,5 @@
 .env
 *.ini
-SendPasttoDB.py
-GreatMigration.py
-UpdatePostInteractions.py
+*\SendPasttoDB.py
+*\GreatMigration.py
+*\UpdatePostInteractions.py
