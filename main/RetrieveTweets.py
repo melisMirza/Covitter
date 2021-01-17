@@ -138,10 +138,11 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
             date1 = fromDate
             date1 = datetime.strptime(fromDate, '%Y-%m-%d')
             endDate = datetime.strptime(toDate, '%Y-%m-%d')
+            date2= endDate + timedelta(days=1)
             daylimit = 1000 / (int(str(endDate - date1).split('day')[0].strip()) + 1)
             print("daylimit:",daylimit)
             output = []
-            end_date = toDate
+            end_date = date2.strftime("%Y-%m-%d")
             while end_date > fromDate:
                 print("end:",end_date)
                 print("todate:",toDate)
