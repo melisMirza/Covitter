@@ -72,7 +72,7 @@ def dateSearchResults(request):
         post_data["combined"].append(combined)
     #print(post_data)
     post_data["count"] = totalPosts
-    return render(request, "main/WordSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments})
+    return render(request, "main/DateSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments})
 
     #return render(request, "main/DateSearchResults.html",{"post_data":post_data})
 
