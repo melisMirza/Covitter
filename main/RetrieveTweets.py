@@ -146,19 +146,18 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
                 print("end:",end_date)
                 print("todate:",toDate)
                 query_end = datetime.strptime(end_date,"%Y-%m-%d")
-                query_start = query_end + timedelta(days=1)
+                query_start = query_end - timedelta(days=1)
                 query_start_str = query_start.strftime("%Y-%m-%d")
 
                 #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(fromDate,toDate)
-                query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT %d' %(end_date,query_start_str,daylimit)
+                query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT %d' %(query_start_str,end_date,daylimit)
                 print(query)
                 cur.execute(query)  
                 output += cur.fetchall()
                 dbconn.commit()
                 print("output:",len(output))
                 
-                query_end = query_end - timedelta(days=1)
-                end_date = query_end.strftime("%Y-%m-%d")
+                end_date = query_start_str
             cur.close()
             '''
             #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(fromDate,toDate)
