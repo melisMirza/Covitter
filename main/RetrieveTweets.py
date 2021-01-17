@@ -96,7 +96,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     cur = dbconn.cursor()
     
     if option.lower() == "all":
-        query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,entities FROM twitter ORDER BY id DESC LIMIT 100'
+        query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter ORDER BY id DESC LIMIT 100'
         #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100'
         cur.execute(query)  
         output = cur.fetchall()
@@ -110,7 +110,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
         lastweek_date = lastweek.strftime("%Y-%m-%d")
         
         #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(lastweek_date,today)
-        query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT 100' %(lastweek_date,today)
+        query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT 100' %(lastweek_date,today)
         cur.execute(query)  
         output = cur.fetchall()
         dbconn.commit() 
@@ -121,7 +121,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
         today = now.strftime("%Y-%m-%d")
 
         #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" \"TWITTER\".\"POST_DATE\" = \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(today)
-        query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,entities FROM twitter WHERE post_date = \'%s\' ORDER BY id DESC LIMIT 100' %(today)
+        query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date = \'%s\' ORDER BY id DESC LIMIT 1000' %(today)
         cur.execute(query)  
         output = cur.fetchall()
         dbconn.commit() 
@@ -129,35 +129,61 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     
     elif option.lower() == "custom":
         if not checkDbForDate(fromDate,toDate):
-            print("getting from api")
-            tweets = getTweetsFromPast(fromDate,toDate)
-            tweetDF = preparePastTweets(tweets)
+            tweetDF = dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"favourite_count":[],"retweet_count":[],"entities":[]}
             return tweetDF
         else:
+            date1 = fromDate
+            date1 = datetime.strptime(fromDate, '%Y-%m-%d')
+            endDate = datetime.strptime(toDate, '%Y-%m-%d')
+            daylimit = 1000 / (int(str(endDate - date1).split('day')[0].strip()) + 1)
+            print("daylimit:",daylimit)
+            output = []
+            end_date = fromDate
+            while end_date != toDate:
+                query_end = datetime.strptime(end_date,"%Y-%m-%d")
+                query_start = query_end + timedelta(days=1)
+                query_start_str = query_start.strftime("%Y-%m-%d")
+
+                #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(fromDate,toDate)
+                query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT %d' %(end_date,query_start_str,daylimit)
+                print(query)
+                cur.execute(query)  
+                output += cur.fetchall()
+                dbconn.commit()
+                print("output:",len(output))
+                
+                query_end = query_end - timedelta(days=1)
+                end_date = query_end.strftime("%Y-%m-%d")
+            cur.close()
+            '''
             #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(fromDate,toDate)
-            query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT 100' %(fromDate,toDate)
+            query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT 100' %(fromDate,toDate)
             cur.execute(query)  
             output = cur.fetchall()
             dbconn.commit() 
             cur.close()
+            '''
     
     elif option.lower() == "search":
         #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE LOWER(\"TWITTER\".\"POST_CONTENT\") LIKE ' +'\'%' + searchwords + '%\'' + ' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 1000'
-        query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,entities FROM twitter WHERE LOWER(post_content) LIKE ' +'\'%' + searchwords + '%\'' + ' ORDER BY id DESC LIMIT 1000'
+        query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE LOWER(post_content) LIKE ' +'\'%' + searchwords + '%\'' + ' ORDER BY id DESC LIMIT 1000'
         print(query)
         cur.execute(query)  
         output = cur.fetchall()
         dbconn.commit() 
         cur.close()
-    dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"entities":[]}
+    
+    dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"favourite_count":[],"retweet_count":[],"entities":[]}
     for tweet in output:
         #print(tweet)
-        (orig_content,post_date,lemma,tags,sentiment,mentions,entities) = tweet
+        (orig_content,post_date,lemma,tags,sentiment,mentions,favourite_count,retweet_count,entities) = tweet
         dfDict["orig_content"].append(orig_content)
         dfDict["lemma"].append(lemma)
         dfDict["tags"].append(tags)
         dfDict["sentiment"].append(sentiment)
         dfDict["mentions"].append(mentions)
+        dfDict["favourite_count"].append(favourite_count)
+        dfDict["retweet_count"].append(retweet_count)
         dfDict["entities"].append(entities)
         dfDict["date"].append(post_date)
 
@@ -246,7 +272,7 @@ def getTweetsFromPast(fromDate,toDate):
     return tweets
 
 def preparePastTweets(tweets):
-    dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"entities":[]}
+    dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"favourite_count":[],"retweet_count":[],"entities":[]}
     print(os.getcwd())
     #tagme.GCUBE_TOKEN = env("TAGME_TOKEN")
     tagme.GCUBE_TOKEN = os.environ['TAGME_TOKEN']

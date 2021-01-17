@@ -82,7 +82,7 @@ def wordSearchResults(request):
         headlines["washington"].append(Cleaner.cleanForView(washington_data[i]["title"]))
     
     #Tweet Content Table
-    post_data_df = tweets[['date','orig_content','sentiment']]
+    post_data_df = tweets[['date','orig_content','favourite_count','retweet_count','sentiment']]
     post_data = post_data_df.to_dict('split')
     for d in range(0,len(post_data["data"])):
         post_data["data"][d][1] = Cleaner.cleanForView(post_data["data"][d][1])
