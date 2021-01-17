@@ -65,7 +65,7 @@
               google.charts.setOnLoadCallback(drawChartEnt);
               function drawChartEnt() {
                 var input_data_ent = JSON.parse("{{entities|escapejs}}");
-                var data = google.visualization.arrayToDataTable(input_data_ent);
+                var data_ent = google.visualization.arrayToDataTable(input_data_ent);
                 var options = {
                   chartArea:{
                     backgroundColor:"transparent"
@@ -82,7 +82,7 @@
         
                 var chart = new google.charts.Bar(document.getElementById('barchart_material'));
         
-                chart.draw(data, google.charts.Bar.convertOptions(options));
+                chart.draw(data_ent, google.charts.Bar.convertOptions(options));
               }
             </script>
             
@@ -219,7 +219,7 @@
                   bars: 'vertical', // Required for Material Bar Charts.
                   backgroundColor:"transparent",
                   dataOpacity:0.8,
-                  colors: ['2b5e17','#1b9e77', '#e3c654','#de6a31', '#d9392b']
+                  colors: ['#2b5e17','#1b9e77', '#e3c654','#de6a31', '#d9392b']
                 };
         
                 var chart = new google.charts.Bar(document.getElementById('barchart_material'));
