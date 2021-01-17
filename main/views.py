@@ -26,7 +26,7 @@ def dateSearchResults(request):
     tweets = RetrieveTweets.getTweetDF(option="custom",fromDate=from_date,toDate=to_date)
     print("tweets:")
     print(tweets)
-    totalPosts = tweets['orig_content']
+    totalPosts = len(tweets['orig_content'])
     '''
     ##network
     print("getting graph")
@@ -88,7 +88,7 @@ def wordSearch(request):
 def wordSearchResults(request):
     search_words = request.GET['search']
     tweets = RetrieveTweets.getTweetDF(option="search",searchwords=search_words.lower())
-    totalPosts = tweets['orig_content']
+    totalPosts = len(tweets['orig_content'])
     #post_data_df = tweets[['orig_content','tags','sentiment']]
     '''
     ##network
