@@ -128,46 +128,48 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
         cur.close()
     
     elif option.lower() == "custom":
+        '''
         if not checkDbForDate(fromDate,toDate):
             print("interval not available")
             dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"favourite_count":[],"retweet_count":[],"entities":[]}
             tweetDF = pd.DataFrame.from_dict(dfDict)
             return tweetDF
         else:
-            print("collecting")
-            date1 = fromDate
-            date1 = datetime.strptime(fromDate, '%Y-%m-%d')
-            endDate = datetime.strptime(toDate, '%Y-%m-%d')
-            date2= endDate + timedelta(days=1)
-            daylimit = 1000 / (int(str(endDate - date1).split('day')[0].strip()) + 1)
-            print("daylimit:",daylimit)
-            output = []
-            end_date = date2.strftime("%Y-%m-%d")
-            while end_date > fromDate:
-                print("end:",end_date)
-                print("todate:",toDate)
-                query_end = datetime.strptime(end_date,"%Y-%m-%d")
-                query_start = query_end - timedelta(days=1)
-                query_start_str = query_start.strftime("%Y-%m-%d")
+        '''    
+        print("collecting")
+        date1 = fromDate
+        date1 = datetime.strptime(fromDate, '%Y-%m-%d')
+        endDate = datetime.strptime(toDate, '%Y-%m-%d')
+        date2= endDate + timedelta(days=1)
+        daylimit = 1000 / (int(str(endDate - date1).split('day')[0].strip()) + 1)
+        print("daylimit:",daylimit)
+        output = []
+        end_date = date2.strftime("%Y-%m-%d")
+        while end_date > fromDate:
+            print("end:",end_date)
+            print("todate:",toDate)
+            query_end = datetime.strptime(end_date,"%Y-%m-%d")
+            query_start = query_end - timedelta(days=1)
+            query_start_str = query_start.strftime("%Y-%m-%d")
 
-                #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(fromDate,toDate)
-                query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT %d' %(query_start_str,end_date,daylimit)
-                print(query)
-                cur.execute(query)  
-                output += cur.fetchall()
-                dbconn.commit()
-                print("output:",len(output))
-                
-                end_date = query_start_str
-            cur.close()
-            '''
             #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(fromDate,toDate)
-            query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT 100' %(fromDate,toDate)
+            query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT %d' %(query_start_str,end_date,daylimit)
+            print(query)
             cur.execute(query)  
-            output = cur.fetchall()
-            dbconn.commit() 
-            cur.close()
-            '''
+            output += cur.fetchall()
+            dbconn.commit()
+            print("output:",len(output))
+            
+            end_date = query_start_str
+        cur.close()
+        '''
+        #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(fromDate,toDate)
+        query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT 100' %(fromDate,toDate)
+        cur.execute(query)  
+        output = cur.fetchall()
+        dbconn.commit() 
+        cur.close()
+        '''
     
     elif option.lower() == "search":
         #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE LOWER(\"TWITTER\".\"POST_CONTENT\") LIKE ' +'\'%' + searchwords + '%\'' + ' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 1000'
