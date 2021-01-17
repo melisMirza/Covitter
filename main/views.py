@@ -50,6 +50,9 @@ def dateSearchResults(request):
     #Sentiments
     sentiments = json.dumps(RetrieveTweets.getSentimentResults(tweets))
     print(sentiments)
+    ## Mentions
+    mentions = json.dumps(Analyzer.getTopMentions(tweets['mentions']))
+    print(mentions)
 
     #News
     headlines = {"cnn":[],"breitbart":[],"washington":[]}   
@@ -76,7 +79,7 @@ def dateSearchResults(request):
         post_data["combined"].append(combined)
     #print(post_data)
     post_data["count"] = totalPosts
-    return render(request, "main/DateSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities})
+    return render(request, "main/DateSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions})
 
     #return render(request, "main/DateSearchResults.html",{"post_data":post_data})
 
@@ -107,6 +110,10 @@ def wordSearchResults(request):
     entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
     print(entities)
     
+    ## Mentions
+    mentions = json.dumps(Analyzer.getTopMentions(tweets['mentions']))
+    print(mentions)
+
     #Hashtag table
     hashDF = RetrieveTweets.getTopHashtags(tweets,count=10)
     hashtag_data = hashDF.to_dict('split')
@@ -146,7 +153,7 @@ def wordSearchResults(request):
         post_data["combined"].append(combined)
     #print(post_data)
     post_data["count"] = totalPosts
-    return render(request, "main/WordSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments, "entities":entities})
+    return render(request, "main/WordSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments, "entities":entities, "mentions":mentions})
 
 def userAccount(request):
     return render(request, "main/UserAccount.html",{})

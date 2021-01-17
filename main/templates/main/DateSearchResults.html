@@ -51,6 +51,91 @@
   </div>
 
   <div class="row justify-content-center">
+    <div class="col-lg-11 col-md-12">
+      <div class="card">
+        <div class="card-header card-header-secondary">
+          <h4 class="card-title">Entities</h4>
+          <p class="card-category">Most Referenced Entities</p>
+        </div>
+        <div class="card-body table-responsive">
+          <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+          <script type="text/javascript">
+            google.charts.load('current', {'packages':['bar']});
+            google.charts.setOnLoadCallback(drawChartEnt);
+            function drawChartEnt() {
+              var input_data_ent = JSON.parse("{{entities|escapejs}}");
+              var data_ent = google.visualization.arrayToDataTable(input_data_ent);
+              var options = {
+                chartArea:{
+                  backgroundColor:"transparent"
+                },
+                axes: {
+                  y: {
+                    0: { side: 'left', label: 'Entities'} // Top x-axis.
+                  }
+                },
+                bars: 'horizontal', // Required for Material Bar Charts.
+                backgroundColor:"transparent",
+                dataOpacity:0.8
+              };
+      
+              var chart = new google.charts.Bar(document.getElementById('barchart_material_ent'));
+      
+              chart.draw(data_ent, google.charts.Bar.convertOptions(options));
+            }
+          </script>
+          
+          <div id="barchart_material_ent" style="opacity: 0.8;height: 500px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>   
+
+  <div class="row justify-content-center">
+    <div class="col-lg-11 col-md-12">
+      <div class="card">
+        <div class="card-header card-header-secondary">
+          <h4 class="card-title">User Mentions</h4>
+          <p class="card-category">Most Mentioned Users</p>
+        </div>
+        <div class="card-body table-responsive">
+          <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+          <script type="text/javascript">
+            google.charts.load('current', {'packages':['bar']});
+            google.charts.setOnLoadCallback(drawChartEnt);
+            function drawChartEnt() {
+              var input_data_ment = JSON.parse("{{mentions|escapejs}}");
+              var data_ent = google.visualization.arrayToDataTable(input_data_ment);
+              var options = {
+                chartArea:{
+                  backgroundColor:"transparent"
+                },
+                axes: {
+                  y: {
+                    0: { side: 'left', label: 'Users'} // Top x-axis.
+                  }
+                },
+                bars: 'horizontal', // Required for Material Bar Charts.
+                backgroundColor:"transparent",
+                dataOpacity:0.8,
+                colors: ['#e3c654']
+              };
+      
+              var chart = new google.charts.Bar(document.getElementById('barchart_material_ment'));
+      
+              chart.draw(data_ment, google.charts.Bar.convertOptions(options));
+            }
+          </script>
+          
+          <div id="barchart_material_ment" style="opacity: 0.8;height: 500px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>  
+
+  <div class="row justify-content-center">
     <div class="col-lg-3 col-md-12">
       <div class="card">
         <div class="card-header card-header-success">

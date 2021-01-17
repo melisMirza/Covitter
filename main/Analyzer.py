@@ -97,3 +97,24 @@ def getTopEntities(entities,result_count=15):
     for r in range(result_count):
         output.append([e_keys[r], entDict_inv[e_keys[r]]])
     return output
+
+def getTopMentions(mentions,result_count=15):
+    allMentions = []
+    
+    #Convert mentions to entities
+    for eg in mentions:
+        temp = []
+        if "str" in str(type(eg)):
+            #allEntities += eg.split('||')      
+            temp = eg.split('||')
+            for e in temp:
+                if e != '':
+                    allMentions.append(e)
+    #allEntities.remove('')
+    mentDict = collections.Counter(allMentions)
+    mentDict_inv = {k: v for k, v in sorted(mentDict.items(), key=lambda item: item[1],reverse=True)}
+    output = [['Entity', 'Occurance']]
+    me_keys = list(mentDict_inv.keys())
+    for r in range(result_count):
+        output.append([me_keys[r], mentDict_inv[me_keys[r]]])
+    return output
