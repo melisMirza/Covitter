@@ -94,7 +94,8 @@ def getTopEntities(entities,result_count=15):
     entDict_inv = {k: v for k, v in sorted(entDict.items(), key=lambda item: item[1],reverse=True)}
     output = [['Entity', 'Occurance']]
     e_keys = list(entDict_inv.keys())
-    for r in range(result_count):
+    limit = [lambda:len(e_keys),lambda:result_count][len(e_keys) > result_count]()
+    for r in range(limit):
         output.append([e_keys[r], entDict_inv[e_keys[r]]])
     return output
 
@@ -115,6 +116,7 @@ def getTopMentions(mentions,result_count=15):
     mentDict_inv = {k: v for k, v in sorted(mentDict.items(), key=lambda item: item[1],reverse=True)}
     output = [['Mention', 'Occurance']]
     me_keys = list(mentDict_inv.keys())
-    for r in range(result_count):
+    limit = [lambda:len(me_keys),lambda:result_count][len(me_keys) > result_count]()
+    for r in range(limit):
         output.append([me_keys[r], mentDict_inv[me_keys[r]]])
     return output
