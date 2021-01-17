@@ -107,7 +107,7 @@
               google.charts.setOnLoadCallback(drawChartEnt);
               function drawChartEnt() {
                 var input_data_ment = JSON.parse("{{mentions|escapejs}}");
-                var data_ent = google.visualization.arrayToDataTable(input_data_ment);
+                var data_ment = google.visualization.arrayToDataTable(input_data_ment);
                 var options = {
                   chartArea:{
                     backgroundColor:"transparent"
