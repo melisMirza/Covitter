@@ -63,7 +63,7 @@ class Listener(StreamListener):
 
         tweet = Tweet(text,status.id_str,status.user.screen_name,status.created_at,ht,pm,status.favorite_count,status.retweet_count,rt)   
         tweets.append(tweet)
-        if len(tweets) == 300:
+        if len(tweets) == 250:
              return False
                   
     def on_error(self, status_code):
