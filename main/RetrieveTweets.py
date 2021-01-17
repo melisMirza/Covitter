@@ -129,9 +129,12 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     
     elif option.lower() == "custom":
         if not checkDbForDate(fromDate,toDate):
-            tweetDF = dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"favourite_count":[],"retweet_count":[],"entities":[]}
+            print("interval not available")
+            dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"favourite_count":[],"retweet_count":[],"entities":[]}
+            tweetDF = pd.DataFrame.from_dict(dfDict)
             return tweetDF
         else:
+            print("collecting")
             date1 = fromDate
             date1 = datetime.strptime(fromDate, '%Y-%m-%d')
             endDate = datetime.strptime(toDate, '%Y-%m-%d')
@@ -372,7 +375,8 @@ def getSentimentResults(tweets):
     for d in dates:
         sentiment_dict[d] = {"Very_Positive":0,"Positive":0,"Negative":0,"Neutral":0,"Very_Negative":0,}
     for i in range(len(sentiment_df.index)):
-        sentiment_dict[tweets["date"][i]][tweets["sentiment"][i]] += 1
+        sent = tweets["sentiment"][i].strip().replace(' ','_')
+        sentiment_dict[tweets["date"][i]][sent] += 1
     for d in dates:
         total = sentiment_dict[d]["Very_Positive"] + sentiment_dict[d]["Positive"] + sentiment_dict[d]["Neutral"] + sentiment_dict[d]["Negative"]+ sentiment_dict[d]["Very_Negative"]
         sentiments.append([str(d), (sentiment_dict[d]["Very_Positive"]/total)*100, (sentiment_dict[d]["Positive"]/total)*100,(sentiment_dict[d]["Neutral"]/total)*100,(sentiment_dict[d]["Negative"]/total)*100,(sentiment_dict[d]["Very_Negative"]/total)*100])

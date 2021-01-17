@@ -24,6 +24,8 @@ def dateSearchResults(request):
     from_date = str(request.GET['from'])
     to_date = str(request.GET['to'])
     tweets = RetrieveTweets.getTweetDF(option="custom",fromDate=from_date,toDate=to_date)
+    print("tweets:")
+    print(tweets)
     #post_data_df = tweets[['orig_content','tags','sentiment']]
     post_data_df = tweets[['date','orig_content','sentiment']]
     post_data = post_data_df.to_dict('split')
