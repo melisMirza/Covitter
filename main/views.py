@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from . import RetrieveTweets, Cleaner, ConcurrenyNetwork, NewsHeadlines
+from . import RetrieveTweets, Cleaner, ConcurrenyNetwork, NewsHeadlines, Analyzer
 import pandas as pd 
 from main.forms import WordSearchForm
 from django.shortcuts import redirect
@@ -27,6 +27,10 @@ def dateSearchResults(request):
     print("tweets:")
     print(tweets)
     totalPosts = len(tweets['orig_content'])
+
+    ## Entities
+    entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
+    print(entities)
     '''
     ##network
     print("getting graph")
@@ -72,7 +76,7 @@ def dateSearchResults(request):
         post_data["combined"].append(combined)
     #print(post_data)
     post_data["count"] = totalPosts
-    return render(request, "main/DateSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments})
+    return render(request, "main/DateSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities})
 
     #return render(request, "main/DateSearchResults.html",{"post_data":post_data})
 
@@ -98,6 +102,11 @@ def wordSearchResults(request):
     nx.draw(conc_graph,pos)
     plt.show()
     '''
+
+    ## Entities
+    entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
+    print(entities)
+    
     #Hashtag table
     hashDF = RetrieveTweets.getTopHashtags(tweets,count=10)
     hashtag_data = hashDF.to_dict('split')
@@ -137,7 +146,7 @@ def wordSearchResults(request):
         post_data["combined"].append(combined)
     #print(post_data)
     post_data["count"] = totalPosts
-    return render(request, "main/WordSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments})
+    return render(request, "main/WordSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments, "entities":entities})
 
 def userAccount(request):
     return render(request, "main/UserAccount.html",{})

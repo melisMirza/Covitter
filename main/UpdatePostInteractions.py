@@ -87,17 +87,18 @@ for post in tweets:
 cur.close()
 
 '''
+API_Key = os.environ['TWIITER_API_KEY']
+API_Secret_Key = os.environ['TWIITER_API_SECRET_KEY']
+Access_Token = os.environ['TWIITER_ACCESS_TOKEN']
+Access_Token_Secret = os.environ['TWIITER_ACCESS_TOKEN_SECRET']
+tagme.GCUBE_TOKEN = os.environ['TAGME_TOKEN']
+
 now = datetime.now()
 lastmonth = now - timedelta(days=30)
 today = now.strftime("%Y-%m-%d")
 lastmonth_date = lastmonth.strftime("%Y-%m-%d")
 
-API_Key = "WNmf8Sn7lxTnv8DXXETH2rMt3"
-API_Secret_Key = "si9nsqctwXlrkCISATa9Tb4Rz8n50WneRIlrpvz710d9SPhI2p"
-Bearer_Token = "AAAAAAAAAAAAAAAAAAAAAEvlJgEAAAAATlgz0sdbprRgHkkU%2B0hVrF1jAKE%3DhX8F3CD6SxXBITywP9TbAYMjABQMLOnZfb7HUlWoa1jNVG5gBq"
-Access_Token = "251584559-knqwY4QZn8G6qmVUba2P9yJJ0aOhRPPMQj5yjjra"
-Access_Token_Secret = "lS2FkFXPLdmKMToCDY2BrLHOh6d3cJJVk0OUYjkgBxLjS"
-tagme.GCUBE_TOKEN = "24d4b5ec-ce55-4be2-a530-75f1d03fbc76-843339462"
+
 
 #Authenticate
 auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)

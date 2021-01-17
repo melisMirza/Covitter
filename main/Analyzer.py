@@ -11,7 +11,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet
 from textblob import TextBlob
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-import tagme
+import tagme, collections
 import environ
 ''' % LOCAL TEST %
 env = environ.Env()
@@ -76,3 +76,24 @@ def getEntities(text,input_type="text"):
             entities.append(t)
             
     return entities
+
+def getTopEntities(entities,result_count=15):
+    allEntities = []
+    
+    #Convert mentions to entities
+    for eg in entities:
+        temp = []
+        if "str" in str(type(eg)):
+            #allEntities += eg.split('||')      
+            temp = eg.split('||')
+            for e in temp:
+                if e != '':
+                    allEntities.append(e)
+    #allEntities.remove('')
+    entDict = collections.Counter(allEntities)
+    entDict_inv = {k: v for k, v in sorted(entDict.items(), key=lambda item: item[1],reverse=True)}
+    output = [['Entity', 'Occurance']]
+    e_keys = list(entDict_inv.keys())
+    for r in range(result_count):
+        output.append([e_keys[r], entDict_inv[e_keys[r]]])
+    return output

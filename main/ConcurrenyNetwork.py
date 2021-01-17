@@ -61,7 +61,26 @@ def createUDUWnetork(tweets):
     print(G.edges())
     
     return G
+    
+#DEGREE CENTRALITY
+def degreeCentrality(G):
+    und_degree = nx.degree_centrality(G)
+    return und_degree
 
+#CLOSENESS CENTRALITY
+def closenessCentrality(G):
+    und_close = nx.closeness_centrality(G)
+    return und_close
+
+#BETWEENNESS CENTRALITY
+def betweennesCentrality(G):
+    und_between = nx.betweenness_centrality(G)
+    return und_between
+
+#EIGENVECTOR CENTRALITY
+def eigenvectorCentrality(G):
+    und_eigen = nx.eigenvector_centrality(G)
+    return und_eigen
 '''
 #creates directed, weighted graph
 def createWDnetork(bloggers,posts,alpha=0.01):
