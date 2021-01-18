@@ -32,10 +32,8 @@ def searchResults(request):
     else:   
         if from_date == "" and to_date == "":
             tweets = RetrieveTweets.getTweetDF(option="search",searchwords=search_words.lower())
-        elif search_words == "":
-            tweets = RetrieveTweets.getTweetDF(option="custom",fromDate=from_date,toDate=to_date)
         else:
-            tweets = RetrieveTweets.getTweetDF(option="combined",fromDate=from_date,toDate=to_date,searchwords=search_words.lower())
+            tweets = RetrieveTweets.getTweetDF(option="custom",fromDate=from_date,toDate=to_date,searchwords=search_words.lower())
     
     print("tweets:")
     print(tweets)
