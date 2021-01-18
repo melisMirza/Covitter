@@ -47,6 +47,7 @@ api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
 now = datetime.now()
 p_d = now.strftime("%Y-%m-%d")
 while p_d != "2020-01-01":
+    print("*******************",p_d,"*******************")
     day_before = datetime.strptime(p_d,"%Y-%m-%d")
     day_before = day_before - timedelta(days=1)
     day_before_str = day_before.strftime("%Y-%m-%d")
@@ -58,7 +59,7 @@ while p_d != "2020-01-01":
     output = curs.fetchall()
     dbconn.commit() 
     (dailyCount,) = output[0]
-    missing = 1000 - dailyCount
+    missing = 2000 - dailyCount
     
     if missing > 0:
         print("will retreive ",missing, " tweets")
