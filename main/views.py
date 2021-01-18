@@ -26,6 +26,7 @@ def searchResults(request):
     from_date = str(request.GET['from'])
     to_date = str(request.GET['to'])
     search_words = request.GET['search']
+    news_from = from_date ; news_to = to_date
     if from_date == "" and to_date == "" and search_words == "":
         return render(request, "main/Search.html",{})
     else:   
@@ -33,6 +34,7 @@ def searchResults(request):
             tweets = RetrieveTweets.getTweetDF(option="search",searchwords=search_words.lower())
         elif search_words == "":
             tweets = RetrieveTweets.getTweetDF(option="custom",fromDate=from_date,toDate=to_date)
+    
     print("tweets:")
     print(tweets)
     totalPosts = len(tweets['orig_content'])
@@ -67,10 +69,12 @@ def searchResults(request):
     headlines = {"cnn":[],"breitbart":[],"washington":[]}   
     if len(tweets['date']) > 0:
         dates = list(set(tweets['date']))
-        dates.sort()       
-        cnn_data = NewsHeadlines.getHeadlines(source="CNN",fromDate = from_date[0],toDate = to_date)
-        breitbart_data = NewsHeadlines.getHeadlines(source="breitbart-news",fromDate = from_date,toDate = to_date)
-        washington_data = NewsHeadlines.getHeadlines(source="the-washington-post",fromDate = from_date,toDate = to_date)
+        dates.sort()    
+        news_from = [lambda:dates[0],lambda:from_date][from_date != ""]()
+        news_to = [lambda:dates[-1],lambda:to_date][to_date != ""]()  
+        cnn_data = NewsHeadlines.getHeadlines(source="CNN",fromDate = news_from,toDate = news_to)
+        breitbart_data = NewsHeadlines.getHeadlines(source="breitbart-news",fromDate = news_from,toDate = news_to)
+        washington_data = NewsHeadlines.getHeadlines(source="the-washington-post",fromDate = news_from,toDate = news_to)
         if len(cnn_data) > 0:
             for i in range(10):
                 headlines["cnn"].append(Cleaner.cleanForView(cnn_data[i]["title"]))
@@ -88,7 +92,7 @@ def searchResults(request):
         post_data["combined"].append(combined)
     #print(post_data)
     post_data["count"] = totalPosts
-    return render(request, "main/DateSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions})
+    return render(request, "main/SearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions})
 
     #return render(request, "main/DateSearchResults.html",{"post_data":post_data})
 
@@ -142,7 +146,7 @@ def dateSearchResults(request):
     if len(tweets['date']) > 0:
         dates = list(set(tweets['date']))
         dates.sort()       
-        cnn_data = NewsHeadlines.getHeadlines(source="CNN",fromDate = from_date[0],toDate = to_date)
+        cnn_data = NewsHeadlines.getHeadlines(source="CNN",fromDate = from_date,toDate = to_date)
         breitbart_data = NewsHeadlines.getHeadlines(source="breitbart-news",fromDate = from_date,toDate = to_date)
         washington_data = NewsHeadlines.getHeadlines(source="the-washington-post",fromDate = from_date,toDate = to_date)
         if len(cnn_data) > 0:
