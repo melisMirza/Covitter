@@ -150,7 +150,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
                 if searchwords == "":
                     query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY post_id DESC LIMIT %d' %(query_start_str,end_date,daylimit)
                 else:
-                    query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' AND LOWER(post_content) LIKE '%(query_start_str,end_date) +'\'%' + searchwords + '%\'' + ' ORDER  ORDER BY post_id DESC LIMIT %d' %(daylimit)
+                    query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' AND LOWER(post_content) LIKE '%(query_start_str,end_date) +'\'%' + searchwords + '%\'' + ' ORDER BY post_id DESC LIMIT %d' %(daylimit)
                 print(query)
                 cur.execute(query)  
                 output += cur.fetchall()
