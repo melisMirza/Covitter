@@ -58,7 +58,7 @@ while p_d != "2020-01-01":
     output = curs.fetchall()
     dbconn.commit() 
     (dailyCount,) = output[0]
-    missing = 2000 - dailyCount
+    missing = 1000 - dailyCount
     
     if missing > 0:
         print("will retreive ",missing, " tweets")
