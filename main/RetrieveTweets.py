@@ -147,7 +147,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
                 query_start_str = query_start.strftime("%Y-%m-%d")
 
                 #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(fromDate,toDate)
-                query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT %d' %(query_start_str,end_date,daylimit)
+                query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY post_id DESC LIMIT %d' %(query_start_str,end_date,daylimit)
                 print(query)
                 cur.execute(query)  
                 output += cur.fetchall()
@@ -159,7 +159,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
         
         elif fromDate == "" and toDate != "":
             print("collecting to: ", toDate)
-            query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date <= \'%s\' ORDER BY id DESC LIMIT 1000' %(toDate)
+            query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date <= \'%s\' ORDER BY post_id DESC LIMIT 1000' %(toDate)
             print(query)
             cur.execute(query)  
             output = cur.fetchall()
@@ -168,7 +168,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
             cur.close()
         elif fromDate != "" and toDate == "":
             print("collecting from: ", fromDate)
-            query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' ORDER BY id ASC LIMIT 1000' %(fromDate)
+            query = 'SELECT post_content,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' ORDER BY post_id ASC LIMIT 1000' %(fromDate)
             print(query)
             cur.execute(query)  
             output = cur.fetchall()

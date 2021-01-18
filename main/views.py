@@ -77,9 +77,18 @@ def searchResults(request):
         washington_data = NewsHeadlines.getHeadlines(source="the-washington-post",fromDate = news_from,toDate = news_to)
         if len(cnn_data) > 0:
             for i in range(10):
-                headlines["cnn"].append(Cleaner.cleanForView(cnn_data[i]["title"]))
-                headlines["breitbart"].append(Cleaner.cleanForView(breitbart_data[i]["title"]))
-                headlines["washington"].append(Cleaner.cleanForView(washington_data[i]["title"]))
+                try:
+                    headlines["cnn"].append(Cleaner.cleanForView(cnn_data[i]["title"]))
+                except IndexError:
+                    pass
+                try:
+                    headlines["breitbart"].append(Cleaner.cleanForView(breitbart_data[i]["title"]))
+                except IndexError:
+                    pass
+                try:
+                    headlines["washington"].append(Cleaner.cleanForView(washington_data[i]["title"]))
+                except IndexError:
+                    pass
 
     #Tweet Content Table
     post_data_df = tweets[['date','orig_content','favourite_count','retweet_count','sentiment']]
