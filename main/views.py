@@ -96,13 +96,10 @@ def searchResults(request):
     post_data = post_data_df.to_dict('split')
     for d in range(0,len(post_data["data"])):
         post_data["data"][d][1] = Cleaner.cleanForView(post_data["data"][d][1])
-    post_data["combined"] = {"id":"","user_name":"","data":[]}
-    post_data
+    post_data["combined"] = [] 
     for i in post_data["index"]:
-        post_data["combined"]["id"] = tweets['post_id'][i]
-        post_data["combined"]["user_name"] = tweets['user_name'][i]
         combined = [i+1] + post_data["data"][i]
-        post_data["combined"]["data"].append(combined)
+        post_data["combined"].append({"id":tweets['post_id'][i],"user_name":tweets['user_name'][i],"data":combined})
     #print(post_data)
     post_data["count"] = totalPosts
     return render(request, "main/SearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions})
