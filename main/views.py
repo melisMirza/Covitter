@@ -91,7 +91,7 @@ def searchResults(request):
                     pass
 
     #Tweet Content Table
-    post_data_df = tweets[['date','user_name','orig_content','favourite_count','retweet_count','sentiment']]
+    post_data_df = tweets[['date','orig_content','favourite_count','retweet_count','sentiment']]
 
     post_data = post_data_df.to_dict('split')
     for d in range(0,len(post_data["data"])):
