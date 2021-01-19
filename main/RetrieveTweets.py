@@ -197,12 +197,12 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
         dbconn.commit() 
         cur.close()
     
-    dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"favourite_count":[],"retweet_count":[],"entities":[]}
+    dfDict = {"post_id":[],"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"favourite_count":[],"retweet_count":[],"entities":[]}
     for tweet in output:
         #print(tweet)
         (post_id,orig_content,post_date,lemma,tags,sentiment,mentions,favourite_count,retweet_count,entities) = tweet
         dfDict["orig_content"].append(orig_content)
-        dfDict["post_id"].append(post_id)
+        dfDict[""].append(post_id)
         dfDict["lemma"].append(lemma)
         dfDict["tags"].append(tags)
         dfDict["sentiment"].append(sentiment)
