@@ -97,7 +97,8 @@ def searchResults(request):
     for d in range(0,len(post_data["data"])):
         post_data["data"][d][1] = Cleaner.cleanForView(post_data["data"][d][1])
     post_data["combined"] = [] 
-    for i in post_data["index"]:
+    #for i in post_data["index"]:
+    for i in post_data["index"][0:500]:
         combined = [i+1] + post_data["data"][i]
         post_data["combined"].append({"id":tweets['post_id'][i],"user_name":tweets['user_name'][i],"data":combined})
     #print(post_data)
