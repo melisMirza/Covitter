@@ -33,11 +33,12 @@ print(base)
 filename = base+"/CustomStopwords.txt"
 stopwords = Cleaner.getCustomStopwords(reference="custom", filename=filename)
 
-API_Key = os.environ['TWIITER_API_KEY']
-API_Secret_Key = os.environ['TWIITER_API_SECRET_KEY']
-Access_Token = os.environ['TWIITER_ACCESS_TOKEN']
-Access_Token_Secret = os.environ['TWIITER_ACCESS_TOKEN_SECRET']
-tagme.GCUBE_TOKEN = os.environ['TAGME_TOKEN']
+API_Key = "WNmf8Sn7lxTnv8DXXETH2rMt3"
+API_Secret_Key = "si9nsqctwXlrkCISATa9Tb4Rz8n50WneRIlrpvz710d9SPhI2p"
+Bearer_Token = "AAAAAAAAAAAAAAAAAAAAAEvlJgEAAAAATlgz0sdbprRgHkkU%2B0hVrF1jAKE%3DhX8F3CD6SxXBITywP9TbAYMjABQMLOnZfb7HUlWoa1jNVG5gBq"
+Access_Token = "251584559-knqwY4QZn8G6qmVUba2P9yJJ0aOhRPPMQj5yjjra"
+Access_Token_Secret = "lS2FkFXPLdmKMToCDY2BrLHOh6d3cJJVk0OUYjkgBxLjS"
+tagme.GCUBE_TOKEN = "24d4b5ec-ce55-4be2-a530-75f1d03fbc76-843339462"
 
 #Authenticate
 auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)
@@ -45,12 +46,17 @@ auth.set_access_token(Access_Token, Access_Token_Secret)
 api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
 
 now = datetime.now()
+now = now - timedelta(days=1)
 p_d = now.strftime("%Y-%m-%d")
 while p_d != "2020-01-01":
     print("*******************",p_d,"*******************")
     day_before = datetime.strptime(p_d,"%Y-%m-%d")
     day_before = day_before - timedelta(days=1)
     day_before_str = day_before.strftime("%Y-%m-%d")
+    
+    day_after = datetime.strptime(p_d,"%Y-%m-%d")
+    day_after = day_after + timedelta(days=1)
+    day_after_str = day_after.strftime("%Y-%m-%d")
 
     dbconn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
     curs = dbconn.cursor()
@@ -65,7 +71,8 @@ while p_d != "2020-01-01":
         print("will retreive ",missing, " tweets")
         
         ids = []
-        query = "covid since:%s until:%s lang:en" %(str(day_before_str).split(' ')[0],str(p_d).split(' ')[0])
+        query = "covid since:%s until:%s lang:en" %(str(p_d).split(' ')[0],str(day_after_str).split(' ')[0])
+        
         print(query)
         for tweet in snscrape.modules.twitter.TwitterSearchScraper(query).get_items():
             tl = str(tweet).split('/')[-1]
@@ -74,7 +81,7 @@ while p_d != "2020-01-01":
             ids.append(tl)
             if len(ids) >= missing:
                 break
-
+        #print(ids)
         end = False
         startIndex = 0
         batch = 30
@@ -114,8 +121,14 @@ while p_d != "2020-01-01":
                     if h["text"].isascii():
                         ht.append(h["text"])
                 post_id = tw.id_str
-                retweet_count = tw.retweet_count
-                favorite_count = tw.favorite_count
+                
+                try:
+                    retweet_count = tw._json["retweeted_status"]["retweet_count"]
+                    favorite_count = tw._json["retweeted_status"]["favorite_count"]
+                except:
+                    retweet_count = tw._json["retweet_count"]
+                    favorite_count = tw._json["favorite_count"]             
+                
                 user_name = tw.user.screen_name
                 post_date = tw.created_at
 
@@ -164,7 +177,7 @@ while p_d != "2020-01-01":
                 print("\n")
             startIndex += batch
             endIndex = startIndex + batch
-            curs.close()
+        curs.close()
         
     p_d = day_before_str
 
