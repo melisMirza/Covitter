@@ -202,7 +202,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
         #print(tweet)
         (post_id,orig_content,post_date,lemma,tags,sentiment,mentions,favourite_count,retweet_count,entities) = tweet
         dfDict["orig_content"].append(orig_content)
-        dfDict[""].append(post_id)
+        dfDict["post_id"].append(post_id)
         dfDict["lemma"].append(lemma)
         dfDict["tags"].append(tags)
         dfDict["sentiment"].append(sentiment)
