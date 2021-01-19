@@ -91,14 +91,18 @@ def searchResults(request):
                     pass
 
     #Tweet Content Table
-    post_data_df = tweets[['date','orig_content','favourite_count','retweet_count','sentiment']]
+    post_data_df = tweets[['date','user_name','orig_content','favourite_count','retweet_count','sentiment']]
+
     post_data = post_data_df.to_dict('split')
     for d in range(0,len(post_data["data"])):
         post_data["data"][d][1] = Cleaner.cleanForView(post_data["data"][d][1])
-    post_data["combined"] = []
+    post_data["combined"] = {"id":"","user_name":"","data":[]}
+    post_data
     for i in post_data["index"]:
+        post_data["combined"]["id"] = tweets['post_id'][i]
+        post_data["combined"]["user_name"] = tweets['user_name'][i]
         combined = [i+1] + post_data["data"][i]
-        post_data["combined"].append(combined)
+        post_data["combined"]["data"].append(combined)
     #print(post_data)
     post_data["count"] = totalPosts
     return render(request, "main/SearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions})

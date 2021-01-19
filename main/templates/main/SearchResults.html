@@ -290,8 +290,8 @@
               <tbody>
                 {% for tweet in post_data.combined %}
                   <tr>
-                    {% for column in tweet %}
-                      <td>{{ column }}</td>
+                    {% for column in tweet.data %}
+                      <td><a href="https://twitter.com/{{ tweet.user_name }}/status/{{ tweet.id }}" target="_blank">{{ column }}</a></td>
                     {% endfor %}
                   </tr>
                 {% endfor %}
@@ -300,7 +300,7 @@
             <script>
               function sortTable(n) {
                 var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-                table = document.getElementById("table_tweet");
+                table = document.getElementById("tweets_table");
                 switching = true;
                 // Set the sorting direction to ascending:
                 dir = "asc";
@@ -322,18 +322,18 @@
                   /* Check if the two rows should switch place,
                   based on the direction, asc or desc: */
                   if (n == 5){
-                  if (dir == "asc") {
-                  if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                    // If so, mark as a switch and break the loop:
-                    shouldSwitch = true;
-                    break;
-                  }
-                  } else if (dir == "desc") {
-                  if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                    // If so, mark as a switch and break the loop:
-                    shouldSwitch = true;
-                    break;
-                  }
+                    if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                      // If so, mark as a switch and break the loop:
+                      shouldSwitch = true;
+                      break;
+                    }
+                    } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                      // If so, mark as a switch and break the loop:
+                      shouldSwitch = true;
+                      break;
+                    }
                   }
                   }
                 }
