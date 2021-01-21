@@ -132,7 +132,7 @@ def collectIndices(network_type=""):
         for dest in neighbours:
             strng = dest[0] + " (" + str(dest[1]) + ")"
             combined.append(strng)
-        combined = '|'.join(combined)
+        combined = ' | '.join(combined)
         print(combined)
         neighbourhood[n] = combined
     dbconn.commit()    
