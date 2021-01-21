@@ -166,6 +166,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
                 end_date = query_start_str
             cur.close()
         
+        
         elif fromDate == "" and toDate != "":
             print("collecting to: ", toDate)
             if searchwords == "":
