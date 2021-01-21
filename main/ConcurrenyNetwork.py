@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pandas as pd 
 #from . import Analyzer, RetrieveTweets
-import psycopg2
+import psycopg2, os
 
 def formatDate(origDate):
     date = origDate
