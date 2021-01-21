@@ -87,8 +87,7 @@ def eigenvectorCentrality(G):
 def collectIndices(network_type=""):
     indices = {"eigenvector":[],"degree":[],"betweenness":[],"closeness":[],"clustering":[]}
     nodes = []
-    #dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
-    dbconn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+    dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     cur = dbconn.cursor()
     query = 'SELECT node,eigenvector_centrality FROM concurrency_indices WHERE eigenvector_centrality is not null ORDER BY eigenvector_centrality DESC LIMIT 10'
     cur.execute(query)  
