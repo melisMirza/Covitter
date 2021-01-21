@@ -145,9 +145,6 @@ def collectIndices(network_type=""):
         indices[index].insert(0,title)
     return indices
         
-
-print(collectIndices(network_type=""))
-
 '''
 #creates directed, weighted graph
 def createWDnetork(bloggers,posts,alpha=0.01):
