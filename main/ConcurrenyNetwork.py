@@ -137,11 +137,10 @@ def collectIndices(network_type=""):
         neighbourhood[n] = combined
     dbconn.commit()    
     cur.close() 
-    title = ["Vertex","Index","Most Weighted Neighbours(w)"]
+    
     for index in indices.keys():
         for j in range(len(indices[index])):
             indices[index][j] += [neighbourhood[indices[index][j][0]]]
-        indices[index].insert(0,title)
     return indices
         
 '''

@@ -45,6 +45,7 @@ def searchResults(request):
     
     ##network indices
     concurreny_entities = ConcurrenyNetwork.collectIndices()
+    concurreny_entities["title"] = ["Vertex","Index","Most Weighted Neighbours(w)"]
     print(concurreny_entities)
 
     

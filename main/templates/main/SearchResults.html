@@ -91,10 +91,17 @@
           <div class="tab-content">
             <div class="tab-pane active" id="degree">
               <table class="table">
+                <thead>
+                {% for col in concurreny_entities.title %}
+                  <th>{{ col }}</th>
+                {% endfor %}
+                </thead>
                 <tbody>
-                  {% for row in concurreny_entities.degree %}
+                  {% for data in concurreny_entities.degree %}
                 <tr>
-                    <td>{{ row }}</td>
+                    {% for column in data %}
+                      <td>{{ column }}</td>
+                    {% endfor %}
                 </tr>
               {% endfor %}
                 </tbody>
@@ -102,10 +109,17 @@
             </div>
             <div class="tab-pane " id="eigenvector">
               <table class="table">
+                <thead>
+                  {% for col in concurreny_entities.title %}
+                    <th>{{ col }}</th>
+                  {% endfor %}
+                  </thead>
                 <tbody>
-                  {% for row in concurreny_entities.eigenvector %}
+                  {% for data in concurreny_entities.eigenvector %}
                 <tr>
-                    <td>{{ row }}</td>
+                  {% for column in data %}
+                    <td>{{ column }}</td>
+                  {% endfor %}
                 </tr>
               {% endfor %}
                 </tbody>
@@ -113,10 +127,17 @@
             </div>
             <div class="tab-pane " id="betweenness">
               <table class="table">
+                <thead>
+                  {% for col in concurreny_entities.title %}
+                    <th>{{ col }}</th>
+                  {% endfor %}
+                  </thead>
                 <tbody>
-                  {% for row in concurreny_entities.betweenness %}
+                  {% for data in concurreny_entities.betweenness %}
                 <tr>
-                    <td>{{ row }}</td>
+                  {% for column in data %}
+                    <td>{{ column }}</td>
+                  {% endfor %}
                 </tr>
               {% endfor %}
                 </tbody>
@@ -124,10 +145,17 @@
             </div>
             <div class="tab-pane " id="closeness">
               <table class="table">
+                <thead>
+                  {% for col in concurreny_entities.title %}
+                    <th>{{ col }}</th>
+                  {% endfor %}
+                  </thead>
                 <tbody>
-                  {% for row in concurreny_entities.closeness %}
+                  {% for data in concurreny_entities.closeness %}
                 <tr>
-                    <td>{{ row }}</td>
+                  {% for column in data %}
+                    <td>{{ column }}</td>
+                  {% endfor %}
                 </tr>
               {% endfor %}
                 </tbody>
@@ -135,10 +163,17 @@
             </div>
             <div class="tab-pane " id="clustering">
               <table class="table">
+                <thead>
+                  {% for col in concurreny_entities.title %}
+                    <th>{{ col }}</th>
+                  {% endfor %}
+                  </thead>
                 <tbody>
-                  {% for row in concurreny_entities.clustering %}
+                  {% for data in concurreny_entities.clustering %}
                 <tr>
-                    <td>{{ row }}</td>
+                  {% for column in data %}
+                    <td>{{ column }}</td>
+                  {% endfor %}
                 </tr>
               {% endfor %}
                 </tbody>
