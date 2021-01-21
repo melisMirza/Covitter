@@ -2,8 +2,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pandas as pd 
-from . import Analyzer, RetrieveTweets
-
+#from . import Analyzer, RetrieveTweets
+import psycopg2
 
 def formatDate(origDate):
     date = origDate
@@ -27,9 +27,6 @@ def createUDUWnetork(tweets):
         entities = []
         if "str" in str(type(tweetDict[t]["entities"])):
             entities = tweetDict[t]["entities"].split('||')
-        if "str" in str(type(tweetDict[t]["mentions"])):
-            tweetDict[t]["entities"] = entities + Analyzer.getEntities(tweetDict[t]["mentions"],input_type="mentions")
-        else:
             tweetDict[t]["entities"] = entities
         allEntities += tweetDict[t]["entities"]
         for ent in tweetDict[t]["entities"]:
@@ -41,25 +38,27 @@ def createUDUWnetork(tweets):
     allEntities = list(set(allEntities))
     allEntities.remove("")
     for e in allEntities:
-        print("Node:",e)
+        #print("Node:",e)
         G.add_node(e.strip())
     
     for i in allEntities:
         e1 = entityDict[i] #tweet indeces including this entity
-        print("e1:",e1)
+        #print("e1:",e1)
         for j in allEntities:
             if i != j:
                 e2 = entityDict[j] #compare against other entities
-                print("e2:",e2)
+                #print("e2:",e2)
                 intersection_list = list(set(e1).intersection(e2))
-                print("intersection:",intersection_list)
+                print(i,"-",j,":",len(intersection_list))
+                #print("intersection:",intersection_list)
                 if len(intersection_list) > 0:
-                    G.add_edge(i,j)
+                    G.add_edge(i,j,weight=len(intersection_list))
+    '''
     print("Nodes")
     print(G.nodes())
     print("Edges")
     print(G.edges())
-    
+    '''
     return G
     
 #DEGREE CENTRALITY
@@ -81,6 +80,74 @@ def betweennesCentrality(G):
 def eigenvectorCentrality(G):
     und_eigen = nx.eigenvector_centrality(G)
     return und_eigen
+
+
+
+
+def collectIndices(network_type=""):
+    indices = {"eigenvector":[],"degree":[],"betweenness":[],"closeness":[],"clustering":[]}
+    nodes = []
+    #dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
+    dbconn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+    cur = dbconn.cursor()
+    query = 'SELECT node,eigenvector_centrality FROM concurrency_indices WHERE eigenvector_centrality is not null ORDER BY eigenvector_centrality DESC LIMIT 10'
+    cur.execute(query)  
+    eigen = cur.fetchall()
+    for r in eigen:
+        nodes.append(r[0])
+        indices["eigenvector"].append(list(r))
+    query = 'SELECT node,degree_centrality FROM concurrency_indices WHERE degree_centrality is not null ORDER BY degree_centrality DESC LIMIT 10'
+    cur.execute(query)  
+    degree = cur.fetchall()
+    for r in degree:
+        nodes.append(r[0])
+        indices["degree"].append(list(r))
+    query = 'SELECT node,betweenness_centrality FROM concurrency_indices WHERE betweenness_centrality is not null ORDER BY betweenness_centrality DESC LIMIT 10'
+    cur.execute(query)  
+    betweenness = cur.fetchall()
+    for r in betweenness:
+        nodes.append(r[0])
+        indices["betweenness"].append(list(r))
+    query = 'SELECT node,closeness_centrality FROM concurrency_indices WHERE closeness_centrality is not null ORDER BY closeness_centrality DESC LIMIT 10'
+    cur.execute(query)  
+    closeness = cur.fetchall()
+    for r in closeness:
+        nodes.append(r[0])
+        indices["closeness"].append(list(r))
+    query = 'SELECT node,clustering_coefficient FROM concurrency_indices WHERE clustering_coefficient is not null ORDER BY clustering_coefficient DESC LIMIT 10'
+    cur.execute(query)  
+    clustering = cur.fetchall()
+    for r in clustering:
+        nodes.append(r[0])
+        indices["clustering"].append(list(r))
+    dbconn.commit() 
+
+    nodes = list(set(nodes))
+    neighbourhood = {}
+    print("total", len(nodes), "nodes")
+    for n in nodes:
+        combined = []
+        query = 'SELECT destination,weight FROM concurrency_adjacency WHERE source = \'%s\' ORDER BY weight DESC LIMIT 5' %(n)
+        cur.execute(query)  
+        neighbours = cur.fetchall()
+        for dest in neighbours:
+            strng = dest[0] + " (" + str(dest[1]) + ")"
+            combined.append(strng)
+        combined = '|'.join(combined)
+        print(combined)
+        neighbourhood[n] = combined
+    dbconn.commit()    
+    cur.close() 
+    title = ["Vertex","Index","Most Weighted Neighbours(w)"]
+    for index in indices.keys():
+        for j in range(len(indices[index])):
+            indices[index][j] += [neighbourhood[indices[index][j][0]]]
+        indices[index].insert(0,title)
+    return indices
+        
+
+print(collectIndices(network_type=""))
+
 '''
 #creates directed, weighted graph
 def createWDnetork(bloggers,posts,alpha=0.01):

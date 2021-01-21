@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import psycopg2
 from . import Cleaner, Analyzer
+#import Cleaner, Analyzer
+
 from configparser import ConfigParser
 import json, tweepy, requests, sys, subprocess, os
 import pandas as pd 
@@ -16,6 +18,8 @@ import string, nltk,re, emot,tagme
 from datetime import datetime
 from datetime import timedelta
 from .Tweet import Tweet
+#from Tweet import Tweet
+
 import environ
 ''' % LOCAL TESTS%
 env = environ.Env()
@@ -56,6 +60,7 @@ def checkDbForDate(startDate,endDate):
     #dbconn = psycopg2.connect(**params)
     
     dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
+    
     cur = dbconn.cursor()
 
     #query = 'SELECT DISTINCT(\"TWITTER\".\"POST_DATE\") FROM \"STREAMED_DATA\".\"TWITTER\"'
@@ -93,6 +98,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     #params = {"host":os.environ['POSTGRES_HOST'], "database":os.environ['POSTGRES_DATABASE'],"user": os.environ['POSTGRES_USER'],"password":os.environ['POSTGRES_PASSWORD']} #config('posts')
     #dbconn = psycopg2.connect(**params)
     dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
+    
     cur = dbconn.cursor()
     
     if option.lower() == "all":
@@ -103,14 +109,14 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
         dbconn.commit() 
         cur.close()
 
-    elif option.lower() == "thisweek":
+    elif option.lower() == "thisweek_all":
         now = datetime.now()
         lastweek = now - timedelta(days=7)
         today = now.strftime("%Y-%m-%d")
         lastweek_date = lastweek.strftime("%Y-%m-%d")
         
         #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(lastweek_date,today)
-        query = 'SELECT post_id,post_content,user_name,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT 1000' %(lastweek_date,today)
+        query = 'SELECT post_id,post_content,user_name,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT 100' %(lastweek_date,today)
         cur.execute(query)  
         output = cur.fetchall()
         dbconn.commit() 

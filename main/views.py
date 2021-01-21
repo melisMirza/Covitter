@@ -42,14 +42,12 @@ def searchResults(request):
     ## Entities
     entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
     print(entities)
-    '''
-    ##network
-    print("getting graph")
-    conc_graph = ConcurrenyNetwork.createUDUWnetork(tweets)
-    pos = nx.fruchterman_reingold_layout(conc_graph)
-    nx.draw(conc_graph,pos)
-    plt.show()
-    '''
+    
+    ##network indices
+    concurreny_entities = ConcurrenyNetwork.collectIndices()
+    print(concurreny_entities)
+
+    
     #Hashtag table
     hashDF = RetrieveTweets.getTopHashtags(tweets,count=10)
     hashtag_data = hashDF.to_dict('split')
@@ -103,10 +101,7 @@ def searchResults(request):
         post_data["combined"].append({"id":tweets['post_id'][i],"user_name":tweets['user_name'][i],"data":combined})
     #print(post_data)
     post_data["count"] = totalPosts
-    return render(request, "main/SearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions})
-
-    #return render(request, "main/DateSearchResults.html",{"post_data":post_data})
-
+    return render(request, "main/SearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions,"concurreny_entities":concurreny_entities})
 
 
 def dateSearch(request):

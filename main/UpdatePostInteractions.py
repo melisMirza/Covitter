@@ -87,15 +87,14 @@ for post in tweets:
 cur.close()
 
 '''
-API_Key = "WNmf8Sn7lxTnv8DXXETH2rMt3"
-API_Secret_Key = "si9nsqctwXlrkCISATa9Tb4Rz8n50WneRIlrpvz710d9SPhI2p"
-Bearer_Token = "AAAAAAAAAAAAAAAAAAAAAEvlJgEAAAAATlgz0sdbprRgHkkU%2B0hVrF1jAKE%3DhX8F3CD6SxXBITywP9TbAYMjABQMLOnZfb7HUlWoa1jNVG5gBq"
-Access_Token = "251584559-knqwY4QZn8G6qmVUba2P9yJJ0aOhRPPMQj5yjjra"
-Access_Token_Secret = "lS2FkFXPLdmKMToCDY2BrLHOh6d3cJJVk0OUYjkgBxLjS"
-tagme.GCUBE_TOKEN = "24d4b5ec-ce55-4be2-a530-75f1d03fbc76-843339462"
+API_Key = os.environ['TWIITER_API_KEY']
+API_Secret_Key = os.environ['TWIITER_API_SECRET_KEY']
+Access_Token = os.environ['TWIITER_ACCESS_TOKEN']
+Access_Token_Secret = os.environ['TWIITER_ACCESS_TOKEN_SECRET']
+tagme.GCUBE_TOKEN = os.environ['TAGME_TOKEN']
 
 now = datetime.now()
-now = now - timedelta(days=10)
+now = now - timedelta(days=30)
 lastmonth = now - timedelta(days=10)
 
 today = now.strftime("%Y-%m-%d")
@@ -108,7 +107,7 @@ auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)
 auth.set_access_token(Access_Token, Access_Token_Secret)
 api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
 
-dbconn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
 curget = dbconn.cursor()
 query = 'SELECT post_id FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ' %(lastmonth_date,today)
 curget.execute(query)  
@@ -129,7 +128,7 @@ while not end:
     if endIndex > len(ids):
         endIndex = len(ids)
         end = True
-    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+    conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     cur = conn.cursor()
     tweetContents = api.statuses_lookup(id_=ids[startIndex:endIndex],tweet_mode="extended")
     for tw in tweetContents:

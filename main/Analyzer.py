@@ -60,21 +60,22 @@ def getEntities(text,input_type="text"):
 
     entities = []
     limit = 0.125
-
-    if input_type == "mentions":
-        for m in text.split('||'):
-            tags = tagme.annotate(m)
+    try:
+        if input_type == "mentions":
+            for m in text.split('||'):
+                tags = tagme.annotate(m)
+                for t in tags.get_annotations(limit):
+                    t = str(t).split('>')[1].split('(')[0].strip()
+                    t = t.replace("\'","\'\'")
+                    entities.append(t)
+        else:
+            tags = tagme.annotate(text)
             for t in tags.get_annotations(limit):
                 t = str(t).split('>')[1].split('(')[0].strip()
                 t = t.replace("\'","\'\'")
                 entities.append(t)
-    else:
-        tags = tagme.annotate(text)
-        for t in tags.get_annotations(limit):
-            t = str(t).split('>')[1].split('(')[0].strip()
-            t = t.replace("\'","\'\'")
-            entities.append(t)
-            
+    except:
+        pass        
     return entities
 
 def getTopEntities(entities,result_count=15):
