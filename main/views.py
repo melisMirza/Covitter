@@ -7,9 +7,86 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import json
+from datetime import datetime
+from datetime import timedelta
 # Create your views here.
 def weekly(request):
-    return render(request, "main/Weekly.html",{})
+    now = datetime.now()
+    lastweek = now - timedelta(days=7)
+    from_date = now.strftime("%Y-%m-%d")
+    to_date = lastweek.strftime("%Y-%m-%d")
+    news_from = from_date ; news_to = to_date
+    tweets = RetrieveTweets.getTweetDF(option="thisweek")
+    print(from_date, " - ", to_date)
+ 
+    ## Entities
+    entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
+    print(entities)
+    '''
+    ##network indices
+    #graph_types are: 'mentions','entities','tags'
+    concurreny_entities = ConcurrenyNetwork.collectIndices("entities")
+    concurreny_entities["title"] = ["Vertex","Index","Most Weighted Neighbours (weight)"]
+    print(concurreny_entities)
+    '''
+    
+    #Hashtag table
+    hashDF = RetrieveTweets.getTopHashtags(tweets,count=10)
+    hashtag_data = hashDF.to_dict('split')
+    hashtag_data["combined"] = []
+    for i in range(len(hashtag_data["index"])):
+        hashtag_data["combined"].append([i+1, hashtag_data["index"][i], hashtag_data["data"][i][0]])
+    hashtag_data["totalCount"] = str(len(hashtag_data["index"]))
+
+    #Sentiments
+    sentiments = json.dumps(RetrieveTweets.getSentimentResults(tweets))
+    print(sentiments)
+    ## Mentions
+    mentions = json.dumps(Analyzer.getTopMentions(tweets['mentions']))
+    print(mentions)
+
+    #News
+    headlines = {"cnn":[],"breitbart":[],"washington":[]}   
+    if len(tweets['date']) > 0:
+        dates = list(set(tweets['date']))
+        dates.sort()    
+        news_from = [lambda:dates[0],lambda:from_date][from_date != ""]()
+        news_to = [lambda:dates[-1],lambda:to_date][to_date != ""]()  
+        cnn_data = NewsHeadlines.getHeadlines(source="CNN",fromDate = news_from,toDate = news_to)
+        breitbart_data = NewsHeadlines.getHeadlines(source="breitbart-news",fromDate = news_from,toDate = news_to)
+        washington_data = NewsHeadlines.getHeadlines(source="the-washington-post",fromDate = news_from,toDate = news_to)
+        if len(cnn_data) > 0:
+            for i in range(10):
+                try:
+                    headlines["cnn"].append(Cleaner.cleanForView(cnn_data[i]["title"]))
+                except IndexError:
+                    pass
+                try:
+                    headlines["breitbart"].append(Cleaner.cleanForView(breitbart_data[i]["title"]))
+                except IndexError:
+                    pass
+                try:
+                    headlines["washington"].append(Cleaner.cleanForView(washington_data[i]["title"]))
+                except IndexError:
+                    pass
+
+    #Tweet Content Table
+    post_data_df = tweets[['date','orig_content','favourite_count','retweet_count','sentiment']]
+
+    post_data = post_data_df.to_dict('split')
+    for d in range(0,len(post_data["data"])):
+        post_data["data"][d][1] = Cleaner.cleanForView(post_data["data"][d][1])
+    post_data["combined"] = [] 
+    #for i in post_data["index"]:
+    post_indices = list(range(100)) + list(range(600,700)) + list(range(1100,1200)) + list(range(1700,1800)) + list(range(2100,2200)) + list(range(2600,2700)) + list(range(3200,3300))
+    cnt = 0
+    for i in post_indices:
+        combined = [cnt+1] + post_data["data"][i]
+        post_data["combined"].append({"id":tweets['post_id'][i],"user_name":tweets['user_name'][i],"data":combined})
+        cnt +=1
+    #print(post_data)
+    post_data["count"] = cnt
+    return render(request, "main/Weekly.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions})#,"concurreny_entities":concurreny_entities})
 
 
 def search(request):
@@ -42,12 +119,13 @@ def searchResults(request):
     ## Entities
     entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
     print(entities)
-    
+    '''
     ##network indices
-    concurreny_entities = ConcurrenyNetwork.collectIndices()
+    #graph_types are: 'mentions','entities','tags'
+    concurreny_entities = ConcurrenyNetwork.collectIndices("entities")
     concurreny_entities["title"] = ["Vertex","Index","Most Weighted Neighbours (weight)"]
     print(concurreny_entities)
-
+    '''
     
     #Hashtag table
     hashDF = RetrieveTweets.getTopHashtags(tweets,count=10)
@@ -102,8 +180,7 @@ def searchResults(request):
         post_data["combined"].append({"id":tweets['post_id'][i],"user_name":tweets['user_name'][i],"data":combined})
     #print(post_data)
     post_data["count"] = totalPosts
-    return render(request, "main/SearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions,"concurreny_entities":concurreny_entities})
-
+    return render(request, "main/SearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions})
 
 def dateSearch(request):
     if request.method == "POST":

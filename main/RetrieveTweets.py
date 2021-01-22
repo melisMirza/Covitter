@@ -60,7 +60,7 @@ def checkDbForDate(startDate,endDate):
     #dbconn = psycopg2.connect(**params)
     
     dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
-    
+
     cur = dbconn.cursor()
 
     #query = 'SELECT DISTINCT(\"TWITTER\".\"POST_DATE\") FROM \"STREAMED_DATA\".\"TWITTER\"'
@@ -98,35 +98,50 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     #params = {"host":os.environ['POSTGRES_HOST'], "database":os.environ['POSTGRES_DATABASE'],"user": os.environ['POSTGRES_USER'],"password":os.environ['POSTGRES_PASSWORD']} #config('posts')
     #dbconn = psycopg2.connect(**params)
     dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
-    
+
     cur = dbconn.cursor()
     
     if option.lower() == "all":
         query = 'SELECT post_id,post_content,user_name,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter ORDER BY id DESC LIMIT 100'
-        #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100'
         cur.execute(query)  
         output = cur.fetchall()
         dbconn.commit() 
         cur.close()
 
-    elif option.lower() == "thisweek_all":
+    elif option.lower() == "thisweek":
         now = datetime.now()
         lastweek = now - timedelta(days=7)
-        today = now.strftime("%Y-%m-%d")
-        lastweek_date = lastweek.strftime("%Y-%m-%d")
+        fromDate = now.strftime("%Y-%m-%d")
+        toDate = lastweek.strftime("%Y-%m-%d")
         
-        #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" WHERE \"TWITTER\".\"POST_DATE\" >= \'%s\' AND \"TWITTER\".\"POST_DATE\" < \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(lastweek_date,today)
-        query = 'SELECT post_id,post_content,user_name,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC LIMIT 100' %(lastweek_date,today)
-        cur.execute(query)  
-        output = cur.fetchall()
-        dbconn.commit() 
+        date1 = fromDate
+        date1 = datetime.strptime(fromDate, '%Y-%m-%d')
+        endDate = datetime.strptime(toDate, '%Y-%m-%d')
+        date2= endDate + timedelta(days=1)
+        daylimit = 500
+        print("daylimit:",daylimit)
+        output = []
+        end_date = date2.strftime("%Y-%m-%d")
+        while end_date > fromDate:
+            print("end:",end_date)
+            print("todate:",toDate)
+            query_end = datetime.strptime(end_date,"%Y-%m-%d")
+            query_start = query_end - timedelta(days=1)
+            query_start_str = query_start.strftime("%Y-%m-%d")
+            query = 'SELECT post_id,post_content,user_name,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY post_id DESC LIMIT %d' %(query_start_str,end_date,daylimit)
+            print(query)
+            cur.execute(query)  
+            output += cur.fetchall()
+            dbconn.commit()
+            print("output:",len(output))
+            
+            end_date = query_start_str
         cur.close()
 
     elif option.lower() == "today":
         now = datetime.now()
         today = now.strftime("%Y-%m-%d")
 
-        #query = 'SELECT \"TWITTER\".\"POST_CONTENT\",\"TWITTER\".\"POST_DATE\",\"TWITTER\".\"POST_LEMMATIZED\",\"TWITTER\".\"HASHTAGS\",\"TWITTER\".\"SENTIMENT_RESULT\",\"TWITTER\".\"MENTIONS_SCREEN_NAME\",\"TWITTER\".\"ENTITIES\" FROM \"STREAMED_DATA\".\"TWITTER\" \"TWITTER\".\"POST_DATE\" = \'%s\' ORDER BY \"TWITTER\".\"ID\" DESC LIMIT 100' %(today)
         query = 'SELECT post_id,post_content,user_name,post_date,post_lemmatized,hashtags,sentiment_result,mentions_screen_name,favourite_count,retweet_count,entities FROM twitter WHERE post_date = \'%s\' ORDER BY id DESC LIMIT 1500' %(today)
         cur.execute(query)  
         output = cur.fetchall()
@@ -166,7 +181,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
                 end_date = query_start_str
             cur.close()
         
-        
+
         elif fromDate == "" and toDate != "":
             print("collecting to: ", toDate)
             if searchwords == "":

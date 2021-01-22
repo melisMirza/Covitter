@@ -17,43 +17,51 @@ def formatDate(origDate):
 
 
 #creates undirected, unweighted graph
-def createUDWnetork(tweets):
+def createUDWnetork(tweets,graph_content):
     G = nx.Graph()
-    tweetDF = tweets[['mentions','entities']]
+    #tweetDF = tweets[['mentions','entities','hashtags']]
+    tweetDF = tweets[[graph_content]]
+    print(tweetDF)
     tweetDict = tweetDF.to_dict('index')
     entityDict = {}
     allEntities = []
     #Convert mentions to entities
     for t in tweetDict.keys():
         entities = []
-        if "str" in str(type(tweetDict[t]["entities"])):
-            entities = tweetDict[t]["entities"].split('||')
-            tweetDict[t]["entities"] = entities
-        allEntities += tweetDict[t]["entities"]
-        for ent in tweetDict[t]["entities"]:
-            if ent != "":
-                if ent.strip() not in entityDict.keys():
-                    entityDict[ent] = [t]
-                else:
-                    entityDict[ent].append(t)
+        if "str" in str(type(tweetDict[t][graph_content])):
+            entities = tweetDict[t][graph_content].split('||')
+            tweetDict[t][graph_content] = entities
+            allEntities += tweetDict[t][graph_content]
+            for ent in tweetDict[t][graph_content]:
+                if ent != "":
+                    if ent.strip() not in entityDict.keys():
+                        entityDict[ent.strip()] = [t]
+                    else:
+                        entityDict[ent.strip()].append(t)
     allEntities = list(set(allEntities))
-    allEntities.remove("")
+    print("node length:", len(allEntities))
+    try:
+        allEntities.remove("")
+    except:
+        pass
     for e in allEntities:
         #print("Node:",e)
         G.add_node(e.strip())
-    
+    print("all nodes added")
     for i in allEntities:
+        i = i.strip()
         e1 = entityDict[i] #tweet indeces including this entity
         #print("e1:",e1)
         for j in allEntities:
+            j=j.strip()
             if i != j:
                 e2 = entityDict[j] #compare against other entities
                 #print("e2:",e2)
                 intersection_list = list(set(e1).intersection(e2))
-                print(i,"-",j,":",len(intersection_list))
                 #print("intersection:",intersection_list)
                 if len(intersection_list) > 0:
                     G.add_edge(i,j,weight=len(intersection_list))
+    print("all edges added")
     return G
     
 #DEGREE CENTRALITY
@@ -79,77 +87,87 @@ def eigenvectorCentrality(G):
 def clusteringCoefficient(G):
     return nx.clustering(G)
 
-tweets = RetrieveTweets.getTweetDF(option="thisweek_all")
-conc = createUDWnetork(tweets)
-conc_edges,conc_weights = zip(*nx.get_edge_attributes(conc,'weight').items())
+graph_types = ["mentions","tags","entities"]
 
-conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
-'''
-for i in range(len(conc_edges)):
-    (source,destination) = conc_edges[i]
-    query_adj = 'INSERT INTO concurrency_adjacency (source , destination, weight) VALUES (\'%s\',\'%s\',%d) RETURNING source' %(source,destination, conc_weights[i])
-    print(query_adj)
-    cur = conn.cursor()
-    cur.execute(query_adj)  
-    output = cur.fetchone()    
-    conn.commit() 
-cur.close()
-'''
-'''
-degree_cent = degreeCentrality(conc)
-closeness_cent = closenessCentrality(conc)
-betweenness_cent = betweennesCentrality(conc)
-eigenvector_cent = eigenvectorCentrality(conc)
-clustring_coef = clusteringCoefficient(conc)
+for t in graph_types:
+    print("type:",t)
+    tweets = RetrieveTweets.getTweetDF(option="thisweek_all")
+    conc = createUDWnetork(tweets,graph_content=t)
+    conc_edges,conc_weights = zip(*nx.get_edge_attributes(conc,'weight').items())
+    '''
+    #conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
+    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
 
-for node in degree_cent.keys():
-    degree = degree_cent[node]
-    query_degree = 'INSERT INTO concurrency_indices (node , degree_centrality) VALUES (\'%s\',%f) RETURNING node' %(node, degree)
-    print(query_degree)
-    cur = conn.cursor()
-    cur.execute(query_degree)  
-    output = cur.fetchone()    
-    conn.commit() 
-cur.close()
+    for i in range(len(conc_edges)):
+        (source,destination) = conc_edges[i]
+        query_adj = 'INSERT INTO concurrency_adjacency (source , destination, weight,type) VALUES (\'%s\',\'%s\',%d,\'%s\') RETURNING source' %(source.replace('\'','\'\''),destination.replace('\'','\'\''), conc_weights[i],t)
+        print(query_adj)
+        cur = conn.cursor()
+        cur.execute(query_adj)  
+        output = cur.fetchone()    
+        conn.commit() 
+    cur.close()
+    '''
 
-for node in betweenness_cent.keys():
-    between = betweenness_cent[node]
-    query_between = 'INSERT INTO concurrency_indices (node , betweenness_centrality) VALUES (\'%s\',%f) RETURNING node' %(node, between)
-    print(query_between)
-    cur = conn.cursor()
-    cur.execute(query_between)  
-    output = cur.fetchone()    
-    conn.commit() 
-cur.close()
+    degree_cent = degreeCentrality(conc)
+    closeness_cent = closenessCentrality(conc)
+    betweenness_cent = betweennesCentrality(conc)
+    eigenvector_cent = eigenvectorCentrality(conc)
+    clustring_coef = clusteringCoefficient(conc)
+    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
 
-for node in closeness_cent.keys():
-    close = closeness_cent[node]
-    query_closeness = 'INSERT INTO concurrency_indices (node , closeness_centrality) VALUES (\'%s\',%f) RETURNING node' %(node, close)
-    print(query_closeness)
-    cur = conn.cursor()
-    cur.execute(query_closeness)  
-    output = cur.fetchone()    
-    conn.commit() 
-cur.close()
+    for node in degree_cent.keys():
+        degree = degree_cent[node]
+        query_degree = 'INSERT INTO concurrency_indices (node , degree_centrality,type) VALUES (\'%s\',%f,\'%s\') RETURNING node' %(node.replace('\'','\'\''), degree,t)
+        print(query_degree)
+        cur = conn.cursor()
+        cur.execute(query_degree)  
+        output = cur.fetchone()    
+        conn.commit() 
+    cur.close()
+    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
 
-for node in eigenvector_cent.keys():
-    eigen = eigenvector_cent[node]
-    query_eigen = 'INSERT INTO concurrency_indices (node , eigenvector_centrality) VALUES (\'%s\',%f) RETURNING node' %(node, eigen)
-    print(query_eigen)
-    cur = conn.cursor()
-    cur.execute(query_eigen)  
-    output = cur.fetchone()    
-    conn.commit() 
-cur.close()
-'''
-clustring_coef = clusteringCoefficient(conc)
+    for node in betweenness_cent.keys():
+        between = betweenness_cent[node]
+        query_between = 'INSERT INTO concurrency_indices (node , betweenness_centrality,type) VALUES (\'%s\',%f,\'%s\') RETURNING node' %(node.replace('\'','\'\''), between,t)
+        print(query_between)
+        cur = conn.cursor()
+        cur.execute(query_between)  
+        output = cur.fetchone()    
+        conn.commit() 
+    cur.close()
+    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
 
-for node in clustring_coef.keys():
-    coef = clustring_coef[node]
-    query_coef = 'INSERT INTO concurrency_indices (node , clustering_coefficient) VALUES (\'%s\',%f) RETURNING node' %(node, coef)
-    print(query_coef)
-    cur = conn.cursor()
-    cur.execute(query_coef)  
-    output = cur.fetchone()    
-    conn.commit() 
-cur.close()
+    for node in closeness_cent.keys():
+        close = closeness_cent[node]
+        query_closeness = 'INSERT INTO concurrency_indices (node , closeness_centrality,type) VALUES (\'%s\',%f,\'%s\') RETURNING node' %(node.replace('\'','\'\''), close,t)
+        print(query_closeness)
+        cur = conn.cursor()
+        cur.execute(query_closeness)  
+        output = cur.fetchone()    
+        conn.commit() 
+    cur.close()
+    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+
+    for node in eigenvector_cent.keys():
+        eigen = eigenvector_cent[node]
+        query_eigen = 'INSERT INTO concurrency_indices (node , eigenvector_centrality,type) VALUES (\'%s\',%f,\'%s\') RETURNING node' %(node.replace('\'','\'\''), eigen,t)
+        print(query_eigen)
+        cur = conn.cursor()
+        cur.execute(query_eigen)  
+        output = cur.fetchone()    
+        conn.commit() 
+    cur.close()
+
+    clustring_coef = clusteringCoefficient(conc)
+    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+
+    for node in clustring_coef.keys():
+        coef = clustring_coef[node]
+        query_coef = 'INSERT INTO concurrency_indices (node , clustering_coefficient,type) VALUES (\'%s\',%f,\'%s\') RETURNING node' %(node.replace('\'','\'\''), coef,t)
+        print(query_coef)
+        cur = conn.cursor()
+        cur.execute(query_coef)  
+        output = cur.fetchone()    
+        conn.commit() 
+    cur.close()

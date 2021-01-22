@@ -84,36 +84,36 @@ def eigenvectorCentrality(G):
 
 
 
-def collectIndices(network_type=""):
+def collectIndices(graph_type):
     indices = {"eigenvector":[],"degree":[],"betweenness":[],"closeness":[],"clustering":[]}
     nodes = []
     dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     cur = dbconn.cursor()
-    query = 'SELECT node,eigenvector_centrality FROM concurrency_indices WHERE eigenvector_centrality is not null ORDER BY eigenvector_centrality DESC LIMIT 10'
+    query = 'SELECT node,eigenvector_centrality FROM concurrency_indices WHERE eigenvector_centrality is not null AND type = \'%s\' ORDER BY eigenvector_centrality DESC LIMIT 10'%(graph_type)
     cur.execute(query)  
     eigen = cur.fetchall()
     for r in eigen:
         nodes.append(r[0])
         indices["eigenvector"].append(list(r))
-    query = 'SELECT node,degree_centrality FROM concurrency_indices WHERE degree_centrality is not null ORDER BY degree_centrality DESC LIMIT 10'
+    query = 'SELECT node,degree_centrality FROM concurrency_indices WHERE degree_centrality is not null AND type = \'%s\' ORDER BY degree_centrality DESC LIMIT 10'%(graph_type)
     cur.execute(query)  
     degree = cur.fetchall()
     for r in degree:
         nodes.append(r[0])
         indices["degree"].append(list(r))
-    query = 'SELECT node,betweenness_centrality FROM concurrency_indices WHERE betweenness_centrality is not null ORDER BY betweenness_centrality DESC LIMIT 10'
+    query = 'SELECT node,betweenness_centrality FROM concurrency_indices WHERE betweenness_centrality is not null AND type = \'%s\' ORDER BY betweenness_centrality DESC LIMIT 10'%(graph_type)
     cur.execute(query)  
     betweenness = cur.fetchall()
     for r in betweenness:
         nodes.append(r[0])
         indices["betweenness"].append(list(r))
-    query = 'SELECT node,closeness_centrality FROM concurrency_indices WHERE closeness_centrality is not null ORDER BY closeness_centrality DESC LIMIT 10'
+    query = 'SELECT node,closeness_centrality FROM concurrency_indices WHERE closeness_centrality is not null AND type = \'%s\' ORDER BY closeness_centrality DESC LIMIT 10'%(graph_type)
     cur.execute(query)  
     closeness = cur.fetchall()
     for r in closeness:
         nodes.append(r[0])
         indices["closeness"].append(list(r))
-    query = 'SELECT node,clustering_coefficient FROM concurrency_indices WHERE clustering_coefficient is not null ORDER BY clustering_coefficient DESC LIMIT 10'
+    query = 'SELECT node,clustering_coefficient FROM concurrency_indices WHERE clustering_coefficient is not null AND type = \'%s\' ORDER BY clustering_coefficient DESC LIMIT 10'%(graph_type)
     cur.execute(query)  
     clustering = cur.fetchall()
     for r in clustering:
@@ -126,7 +126,7 @@ def collectIndices(network_type=""):
     print("total", len(nodes), "nodes")
     for n in nodes:
         combined = []
-        query = 'SELECT destination,weight FROM concurrency_adjacency WHERE source = \'%s\' ORDER BY weight DESC LIMIT 5' %(n)
+        query = 'SELECT destination,weight FROM concurrency_adjacency WHERE source = \'%s\' AND type = \'%s\' ORDER BY weight DESC LIMIT 5' %(n,graph_type)
         cur.execute(query)  
         neighbours = cur.fetchall()
         for dest in neighbours:
