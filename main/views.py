@@ -13,12 +13,12 @@ from datetime import timedelta
 def weekly(request):
     now = datetime.now()
     lastweek = now - timedelta(days=7)
-    from_date = now.strftime("%Y-%m-%d")
-    to_date = lastweek.strftime("%Y-%m-%d")
+    to_date = now.strftime("%Y-%m-%d")
+    from_date = lastweek.strftime("%Y-%m-%d")
     news_from = from_date ; news_to = to_date
     tweets = RetrieveTweets.getTweetDF(option="thisweek")
     print(from_date, " - ", to_date)
- 
+    print(tweets)
     ## Entities
     entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
     print(entities)
