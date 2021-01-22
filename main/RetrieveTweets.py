@@ -111,8 +111,8 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     elif option.lower() == "thisweek":
         now = datetime.now()
         lastweek = now - timedelta(days=7)
-        fromDate = now.strftime("%Y-%m-%d")
-        toDate = lastweek.strftime("%Y-%m-%d")
+        toDate = now.strftime("%Y-%m-%d")
+        fromDate = lastweek.strftime("%Y-%m-%d")
         
         date1 = fromDate
         date1 = datetime.strptime(fromDate, '%Y-%m-%d')
