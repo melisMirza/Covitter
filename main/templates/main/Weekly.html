@@ -54,7 +54,13 @@
               <span class="nav-tabs-title">CONCURRENCY GRAPH ANALYSIS (ENTITIES)</span>
               <ul class="nav nav-tabs" data-tabs="tabs">
                 <li class="nav-item">
-                  <a class="nav-link active" href="#degree" data-toggle="tab">
+                  <a class="nav-link active" href="#adjacency" data-toggle="tab">
+                    Most Connected
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link " href="#degree" data-toggle="tab">
                     Degree Centrality
                     <div class="ripple-container"></div>
                   </a>
@@ -83,7 +89,25 @@
         </div>
         <div class="card-body">
           <div class="tab-content">
-            <div class="tab-pane active" id="degree">
+            <div class="tab-pane active" id="adjacency">
+              <table class="table">
+                <thead class="text-warning">
+                    <th>Entity</th>
+                    <th>Entity</th>
+                    <th>Weight</th>
+                </thead>
+                <tbody>
+                  {% for row in concurreny_entities.adjacency %}
+                <tr>
+                  {% for col in row %}
+                    <td>{{ col }}</td>
+                  {% endfor %}
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane " id="degree">
               <table class="table">
                 <thead class="text-warning">
                   {% for title in concurreny_entities.title %}
@@ -214,7 +238,13 @@
               <span class="nav-tabs-title">CONCURRENCY GRAPH ANALYSIS (MENTIONS)</span>
               <ul class="nav nav-tabs" data-tabs="tabs">
                 <li class="nav-item">
-                  <a class="nav-link active" href="#degree_ment" data-toggle="tab">
+                  <a class="nav-link active" href="#adjacency_ment" data-toggle="tab">
+                    Most Connected
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link " href="#degree_ment" data-toggle="tab">
                     Degree Centrality
                     <div class="ripple-container"></div>
                   </a>
@@ -243,7 +273,25 @@
         </div>
         <div class="card-body">
           <div class="tab-content">
-            <div class="tab-pane active" id="degree_ment">
+            <div class="tab-pane active" id="adjacency_ment">
+              <table class="table">
+                <thead class="text-warning">
+                    <th>User</th>
+                    <th>User</th>
+                    <th>Weight</th>
+                </thead>
+                <tbody>
+                  {% for row in concurreny_entities.adjacency %}
+                <tr>
+                  {% for col in row %}
+                    <td>{{ col }}</td>
+                  {% endfor %}
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane " id="degree_ment">
               <table class="table">
                 <thead class="text-warning">
                   {% for title in concurreny_entities.title %}
@@ -427,7 +475,13 @@
                 <span class="nav-tabs-title">CONCURRENCY GRAPH ANALYSIS (HASHTAGS)</span>
                 <ul class="nav nav-tabs" data-tabs="tabs">
                   <li class="nav-item">
-                    <a class="nav-link active" href="#degree_hash" data-toggle="tab">
+                    <a class="nav-link active" href="#adjacency_hash" data-toggle="tab">
+                      Most Connected
+                      <div class="ripple-container"></div>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link " href="#degree_hash" data-toggle="tab">
                       Degree Centrality
                       <div class="ripple-container"></div>
                     </a>
@@ -456,7 +510,25 @@
           </div>
           <div class="card-body">
             <div class="tab-content">
-              <div class="tab-pane active" id="degree_hash">
+              <div class="tab-pane active" id="adjacency_hash">
+                <table class="table">
+                  <thead class="text-warning">
+                      <th>Hashtag</th>
+                      <th>Hashtag</th>
+                      <th>Weight</th>
+                  </thead>
+                  <tbody>
+                    {% for row in concurreny_entities.adjacency %}
+                  <tr>
+                    {% for col in row %}
+                      <td>{{ col }}</td>
+                    {% endfor %}
+                  </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="tab-pane " id="degree_hash">
                 <table class="table">
                   <thead class="text-warning">
                     {% for title in concurreny_entities.title %}

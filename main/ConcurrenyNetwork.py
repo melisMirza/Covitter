@@ -134,11 +134,19 @@ def collectIndices(graph_type):
         print(combined)
         neighbourhood[n] = combined
     dbconn.commit()    
-    cur.close() 
     
     for index in indices.keys():
         for j in range(len(indices[index])):
             indices[index][j] += [neighbourhood[indices[index][j][0]]]
+    
+    cur = dbconn.cursor()
+    query = 'SELECT source,destination,weight FROM concurrency_adjacency WHERE weight is not null AND type = \'%s\' ORDER BY weight DESC LIMIT 10'%(graph_type)
+    cur.execute(query)  
+    adj = cur.fetchall()
+    for r in adj:
+        indices["adjacency"].append(list(r))
+    dbconn.commit()    
+    cur.close() 
     return indices
         
 
