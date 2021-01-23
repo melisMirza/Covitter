@@ -97,7 +97,7 @@
                     <th>Weight</th>
                 </thead>
                 <tbody>
-                  {% for row in concurreny_mentions.adjacency %}
+                  {% for row in concurreny_entities.adjacency %}
                 <tr>
                   {% for col in row %}
                     <td>{{ col }}</td>
@@ -115,7 +115,7 @@
                   {% endfor %}
                 </thead>
                 <tbody>
-                  {% for row in concurreny_mentions.degree %}
+                  {% for row in concurreny_entities.degree %}
                 <tr>
                   {% for col in row %}
                     <td>{{ col }}</td>
@@ -133,7 +133,7 @@
                   {% endfor %}
                 </thead>
                 <tbody>
-                  {% for row in concurreny_mentions.betweenness %}
+                  {% for row in concurreny_entities.betweenness %}
                 <tr>
                     {% for col in row %}
                       <td>{{ col }}</td>
@@ -151,7 +151,7 @@
                   {% endfor %}
                 </thead>
                 <tbody>
-                  {% for row in concurreny_mentions.closeness %}
+                  {% for row in concurreny_entities.closeness %}
                 <tr>
                   {% for col in row %}
                     <td>{{ col }}</td>
@@ -169,7 +169,7 @@
                   {% endfor %}
                 </thead>
                 <tbody>
-                  {% for row in concurreny_mentions.clustering %}
+                  {% for row in concurreny_entities.clustering %}
                 <tr>
                   {% for col in row %}
                     <td>{{ col }}</td>
