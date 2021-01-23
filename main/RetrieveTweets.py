@@ -7,8 +7,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import psycopg2
-#from . import Cleaner, Analyzer
-import Cleaner, Analyzer
+from . import Cleaner, Analyzer
+#import Cleaner, Analyzer
 
 from configparser import ConfigParser
 import json, tweepy, requests, sys, subprocess, os
@@ -17,8 +17,8 @@ import snscrape.modules.twitter
 import string, nltk,re, emot,tagme
 from datetime import datetime
 from datetime import timedelta
-#from .Tweet import Tweet
-from Tweet import Tweet
+from .Tweet import Tweet
+#from Tweet import Tweet
 
 import environ
 ''' % LOCAL TESTS%
@@ -59,8 +59,7 @@ def checkDbForDate(startDate,endDate):
     #params = {"host":env("POSTGRES_HOST"), "database":env("POSTGRES_DATABASE"),"user": env("POSTGRES_USER"),"password":env("POSTGRES_PASSWORD")} #config('posts')
     #dbconn = psycopg2.connect(**params)
     
-    dbconn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
-
+    dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     cur = dbconn.cursor()
 
     #query = 'SELECT DISTINCT(\"TWITTER\".\"POST_DATE\") FROM \"STREAMED_DATA\".\"TWITTER\"'
@@ -97,8 +96,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     #params = {"host":env("POSTGRES_HOST"), "database":env("POSTGRES_DATABASE"),"user": env("POSTGRES_USER"),"password":env("POSTGRES_PASSWORD")}
     #params = {"host":os.environ['POSTGRES_HOST'], "database":os.environ['POSTGRES_DATABASE'],"user": os.environ['POSTGRES_USER'],"password":os.environ['POSTGRES_PASSWORD']} #config('posts')
     #dbconn = psycopg2.connect(**params)
-    #dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
-    dbconn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+    dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     cur = dbconn.cursor()
     
     if option.lower() == "all":
