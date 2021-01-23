@@ -21,8 +21,11 @@ def loginUser(request):
 
         if request.method == "POST":
             username = request.POST.get('username')
+            print("username:",username)
             password = request.POST.get('password')
+            print("pass:",password)
             user = authenticate(username=username,password=password)
+            print("user:",user)
             if user is not None:
                 login(request,user)
                 return redirect("/analytics")
