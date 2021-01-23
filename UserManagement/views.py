@@ -13,7 +13,7 @@ def loginUser(request):
     form = LoginForm(request.POST)
 
     if request.method == "POST":
-       return render(request, "UserManagement/Welcome.html",{})
+       return redirect("/analytics")
 
     return render(request, "UserManagement/Login.html" ,{"form":form})
 
@@ -31,7 +31,7 @@ def signup(request):
 
             new_user = User(username=username,password=password,email=email,first_name=firstname,last_name=lastname)
             new_user.save()
-            return render(request, "UserManagement/Welcome.html",{})
+            return redirect("/analytics")
 
     return render(request, "UserManagement/SignUp.html" ,{"form":form})
 

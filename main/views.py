@@ -22,13 +22,13 @@ def weekly(request):
     ## Entities
     entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
     print(entities)
-    '''
+    
     ##network indices
     #graph_types are: 'mentions','entities','tags'
     concurreny_entities = ConcurrenyNetwork.collectIndices("entities")
     concurreny_entities["title"] = ["Vertex","Index","Most Weighted Neighbours (weight)"]
     print(concurreny_entities)
-    '''
+    
     
     #Hashtag table
     hashDF = RetrieveTweets.getTopHashtags(tweets,count=10)
@@ -86,7 +86,7 @@ def weekly(request):
         cnt +=1
     #print(post_data)
     post_data["count"] = cnt
-    return render(request, "main/Weekly.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions})#,"concurreny_entities":concurreny_entities})
+    return render(request, "main/Weekly.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments,"entities":entities,"mentions":mentions,"concurreny_entities":concurreny_entities})
 
 
 def search(request):

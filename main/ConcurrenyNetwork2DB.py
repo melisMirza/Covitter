@@ -91,10 +91,10 @@ graph_types = ["mentions","tags","entities"]
 
 for t in graph_types:
     print("type:",t)
-    tweets = RetrieveTweets.getTweetDF(option="thisweek_all")
+    tweets = RetrieveTweets.getTweetDF(option="thisweek")
     conc = createUDWnetork(tweets,graph_content=t)
     conc_edges,conc_weights = zip(*nx.get_edge_attributes(conc,'weight').items())
-    '''
+    
     #conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
 
@@ -107,7 +107,7 @@ for t in graph_types:
         output = cur.fetchone()    
         conn.commit() 
     cur.close()
-    '''
+    
 
     degree_cent = degreeCentrality(conc)
     closeness_cent = closenessCentrality(conc)

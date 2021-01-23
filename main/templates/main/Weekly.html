@@ -3,24 +3,6 @@
 {% block content%}
 <div class="container-fluid">
   <div class="row justify-content-center">
-    <div class="col-xl-4 col-lg-12">
-        <br>
-        <br> 
-        <div class="input-group no-border">
-          <form action="/analytics/search/" method="POST">
-            {% csrf_token %}
-            <input type="date" id="from_date" name="from_date" value="" class="form-control" >
-            <input type="date" id="to_date" name="to_date" value="" class="form-control" >
-            <input id="search_words" name="search_words" type="text" class="form-control" placeholder="Search..." style="width:300px;">
-            <button type="submit" class="btn btn-default btn-round btn-just-icon" style="float: right;">
-              <i class="material-icons">search</i>
-            </button>
-          </form>
-        </div>
-    </div>
-  </div>
-
-  <div class="row justify-content-center">
     <div class="col-lg-11 col-md-12">
       <div class="card">
         <div class="card-header card-header-success">
@@ -62,6 +44,115 @@
       </div>
     </div>
   </div>   
+
+  <div class="row justify-content-center">
+    <div class="col-lg-11 col-md-12">
+      <div class="card">
+        <div class="card-header card-header-tabs card-header-warning">
+          <div class="nav-tabs-navigation">
+            <div class="nav-tabs-wrapper">
+              <span class="nav-tabs-title">CONCURRENCY GRAPH ANALYSIS (ENTITIES)</span>
+              <ul class="nav nav-tabs" data-tabs="tabs">
+                <li class="nav-item">
+                  <a class="nav-link active" href="#degree" data-toggle="tab">
+                    Degree Centrality
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="#betweenness" data-toggle="tab">
+                    Betweenness Centrality
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="#closeness" data-toggle="tab">
+                    Closeness Centrality
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link active" href="#clustering" data-toggle="tab">
+                    Clustering Coefficient
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tab-content">
+            <div class="tab-pane active" id="degree">
+              <table class="table">
+                <thead class="text-warning">
+                  {% for title in concurreny_entities.title %}
+                    <th>{{ title }}</th>
+                  {% endfor %}
+                </thead>
+                <tbody>
+                  {% for row in concurreny_entities.degree %}
+                <tr>
+                    <td>{{ row }}</td>
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane active" id="betweenness">
+              <table class="table">
+                <thead class="text-warning">
+                  {% for title in concurreny_entities.title %}
+                    <th>{{ title }}</th>
+                  {% endfor %}
+                </thead>
+                <tbody>
+                  {% for row in concurreny_entities.betweenness %}
+                <tr>
+                    <td>{{ row }}</td>
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane active" id="closeness">
+              <table class="table">
+                <thead class="text-warning">
+                  {% for title in concurreny_entities.title %}
+                    <th>{{ title }}</th>
+                  {% endfor %}
+                </thead>
+                <tbody>
+                  {% for row in concurreny_entities.closeness %}
+                <tr>
+                    <td>{{ row }}</td>
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane active" id="clustering">
+              <table class="table">
+                <thead class="text-warning">
+                  {% for title in concurreny_entities.title %}
+                    <th>{{ title }}</th>
+                  {% endfor %}
+                </thead>
+                <tbody>
+                  {% for row in concurreny_entities.clustering %}
+                <tr>
+                    <td>{{ row }}</td>
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
 
   <div class="row justify-content-center">
     <div class="col-lg-11 col-md-12">

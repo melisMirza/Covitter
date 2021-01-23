@@ -82,8 +82,6 @@ def eigenvectorCentrality(G):
     return und_eigen
 
 
-
-
 def collectIndices(graph_type):
     indices = {"eigenvector":[],"degree":[],"betweenness":[],"closeness":[],"clustering":[]}
     nodes = []
@@ -143,6 +141,10 @@ def collectIndices(graph_type):
             indices[index][j] += [neighbourhood[indices[index][j][0]]]
     return indices
         
+
+
+
+
 '''
 #creates directed, weighted graph
 def createWDnetork(bloggers,posts,alpha=0.01):
