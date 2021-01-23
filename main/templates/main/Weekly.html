@@ -48,37 +48,37 @@
   <div class="row justify-content-center">
     <div class="col-lg-11 col-md-12">
       <div class="card">
-        <div class="card-header card-header-tabs card-header-success">
+        <div class="card-header card-header-tabs card-header-primary">
           <div class="nav-tabs-navigation">
             <div class="nav-tabs-wrapper">
-              <span class="nav-tabs-title">CONCURRENCY GRAPH ANALYSIS (ENTITIES)</span>
+              <span class="nav-tabs-title">CONCURRENCY GRAPH ANALYSIS (MENTIONS)</span>
               <ul class="nav nav-tabs" data-tabs="tabs">
                 <li class="nav-item">
-                  <a class="nav-link " href="#adjacency" data-toggle="tab">
+                  <a class="nav-link active" href="#adjacency_ment1" data-toggle="tab">
                     Most Connected
                     <div class="ripple-container"></div>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link active " href="#degree" data-toggle="tab">
+                  <a class="nav-link " href="#degree_ment1" data-toggle="tab">
                     Degree Centrality
                     <div class="ripple-container"></div>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link " href="#betweenness" data-toggle="tab">
+                  <a class="nav-link " href="#betweenness_ment1" data-toggle="tab">
                     Betweenness Centrality
                     <div class="ripple-container"></div>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link " href="#closeness" data-toggle="tab">
+                  <a class="nav-link " href="#closeness_ment1" data-toggle="tab">
                     Closeness Centrality
                     <div class="ripple-container"></div>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link " href="#clustering" data-toggle="tab">
+                  <a class="nav-link " href="#clustering_ment1" data-toggle="tab">
                     Clustering Coefficient
                     <div class="ripple-container"></div>
                   </a>
@@ -89,15 +89,15 @@
         </div>
         <div class="card-body">
           <div class="tab-content">
-            <div class="tab-pane active " id="degree">
+            <div class="tab-pane active" id="adjacency_ment1">
               <table class="table">
                 <thead class="text-warning">
-                  {% for title in concurreny_entities.title %}
-                    <th>{{ title }}</th>
-                  {% endfor %}
+                    <th>User</th>
+                    <th>User</th>
+                    <th>Weight</th>
                 </thead>
                 <tbody>
-                  {% for row in concurreny_entities.degree %}
+                  {% for row in concurreny_mentions.adjacency %}
                 <tr>
                   {% for col in row %}
                     <td>{{ col }}</td>
@@ -107,7 +107,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="tab-pane " id="betweenness">
+            <div class="tab-pane " id="degree_ment1">
               <table class="table">
                 <thead class="text-warning">
                   {% for title in concurreny_entities.title %}
@@ -115,7 +115,25 @@
                   {% endfor %}
                 </thead>
                 <tbody>
-                  {% for row in concurreny_entities.betweenness %}
+                  {% for row in concurreny_mentions.degree %}
+                <tr>
+                  {% for col in row %}
+                    <td>{{ col }}</td>
+                  {% endfor %}
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane " id="betweenness_ment1">
+              <table class="table">
+                <thead class="text-warning">
+                  {% for title in concurreny_entities.title %}
+                    <th>{{ title }}</th>
+                  {% endfor %}
+                </thead>
+                <tbody>
+                  {% for row in concurreny_mentions.betweenness %}
                 <tr>
                     {% for col in row %}
                       <td>{{ col }}</td>
@@ -125,7 +143,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="tab-pane " id="closeness">
+            <div class="tab-pane " id="closeness_ment1">
               <table class="table">
                 <thead class="text-warning">
                   {% for title in concurreny_entities.title %}
@@ -133,7 +151,7 @@
                   {% endfor %}
                 </thead>
                 <tbody>
-                  {% for row in concurreny_entities.closeness %}
+                  {% for row in concurreny_mentions.closeness %}
                 <tr>
                   {% for col in row %}
                     <td>{{ col }}</td>
@@ -143,7 +161,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="tab-pane " id="clustering">
+            <div class="tab-pane " id="clustering_ment1">
               <table class="table">
                 <thead class="text-warning">
                   {% for title in concurreny_entities.title %}
@@ -151,25 +169,7 @@
                   {% endfor %}
                 </thead>
                 <tbody>
-                  {% for row in concurreny_entities.clustering %}
-                <tr>
-                  {% for col in row %}
-                    <td>{{ col }}</td>
-                  {% endfor %}
-                </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            <div class="tab-pane " id="adjacency">
-              <table class="table">
-                <thead class="text-warning">
-                    <th>Entity</th>
-                    <th>Entity</th>
-                    <th>Weight</th>
-                </thead>
-                <tbody>
-                  {% for row in concurreny_entities.adjacency %}
+                  {% for row in concurreny_mentions.clustering %}
                 <tr>
                   {% for col in row %}
                     <td>{{ col }}</td>
