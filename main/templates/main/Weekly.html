@@ -1,18 +1,17 @@
 {% extends 'main/Layout.html' %}
 
 {% block content%}
-<div class="container-fluid">
-    <div class="row align-items-center justify-content-center mb-2">
-      <h1 class="simple-text logo-normal"> 
-          <br> 
-          Welcome {{user.get_username}}
-          <br> 
+  <div class="container-fluid">
+    <div class="row align-items-center justify-content-center">
+      <h1 class="text-muted	  text-left"> 
+          Welcome {{user.get_username}},
       </h1>
-      <h2 class="simple-text logo-normal"> 
-        <br>   
-        Here is your weekly COVID-19 Report... 
-    </h2>
-  </div>
+    </div>
+    <div class="row align-items-center justify-content-center">
+          <h3 class="text-muted font-italic text-left"> 
+          Here is your weekly COVID-19 Report...
+        </h3>
+    </div>
 
   <div class="row justify-content-center">
     <div class="col-lg-11 col-md-12">
