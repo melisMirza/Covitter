@@ -340,6 +340,146 @@
   </div>
 
   <div class="row justify-content-center">
+    <div class="col-lg-9 col-md-12">
+      <div class="card">
+        <div class="card-header card-header-tabs card-header-info">
+          <div class="nav-tabs-navigation">
+            <div class="nav-tabs-wrapper">
+              <span class="nav-tabs-title">CONCURRENCY GRAPH ANALYSIS (HASHTAGS)</span>
+              <ul class="nav nav-tabs" data-tabs="tabs">
+                <li class="nav-item">
+                  <a class="nav-link active" href="#adjacency_hash" data-toggle="tab">
+                    Most Connected
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link " href="#degree_hash" data-toggle="tab">
+                    Degree Centrality
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link " href="#betweenness_hash" data-toggle="tab">
+                    Betweenness Centrality
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link " href="#closeness_hash" data-toggle="tab">
+                    Closeness Centrality
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link " href="#clustering_hash" data-toggle="tab">
+                    Clustering Coefficient
+                    <div class="ripple-container"></div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tab-content">
+            <div class="tab-pane active" id="adjacency_hash">
+              <table class="table">
+                <thead class="text-warning">
+                    <th>Hashtag</th>
+                    <th>Hashtag</th>
+                    <th>Weight</th>
+                </thead>
+                <tbody>
+                  {% for row in concurreny_hashtags.adjacency %}
+                <tr>
+                  {% for col in row %}
+                    <td>{{ col }}</td>
+                  {% endfor %}
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane " id="degree_hash">
+              <table class="table">
+                <thead class="text-warning">
+                  {% for title in concurreny_entities.title %}
+                    <th>{{ title }}</th>
+                  {% endfor %}
+                </thead>
+                <tbody>
+                  {% for row in concurreny_hashtags.degree %}
+                <tr>
+                  {% for col in row %}
+                    <td>{{ col }}</td>
+                  {% endfor %}
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane " id="betweenness_hash">
+              <table class="table">
+                <thead class="text-warning">
+                  {% for title in concurreny_entities.title %}
+                    <th>{{ title }}</th>
+                  {% endfor %}
+                </thead>
+                <tbody>
+                  {% for row in concurreny_hashtags.betweenness %}
+                <tr>
+                    {% for col in row %}
+                      <td>{{ col }}</td>
+                    {% endfor %}
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane " id="closeness_hash">
+              <table class="table">
+                <thead class="text-warning">
+                  {% for title in concurreny_entities.title %}
+                    <th>{{ title }}</th>
+                  {% endfor %}
+                </thead>
+                <tbody>
+                  {% for row in concurreny_hashtags.closeness %}
+                <tr>
+                  {% for col in row %}
+                    <td>{{ col }}</td>
+                  {% endfor %}
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane " id="clustering_hash">
+              <table class="table">
+                <thead class="text-warning">
+                  {% for title in concurreny_entities.title %}
+                    <th>{{ title }}</th>
+                  {% endfor %}
+                </thead>
+                <tbody>
+                  {% for row in concurreny_hashtags.clustering %}
+                <tr>
+                  {% for col in row %}
+                    <td>{{ col }}</td>
+                  {% endfor %}
+                </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+  <div class="row justify-content-center">
     <div class="col-lg-10 col-md-12">
       <div class="card">
         <div class="card-header card-header-primary">
@@ -385,7 +525,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-9 col-md-12">
       <div class="card">
-        <div class="card-header card-header-tabs card-header-warning">
+        <div class="card-header card-header-tabs card-header-success">
           <div class="nav-tabs-navigation">
             <div class="nav-tabs-wrapper">
               <span class="nav-tabs-title">CONCURRENCY GRAPH ANALYSIS (MENTIONS)</span>
@@ -521,147 +661,6 @@
         </div>
       </div>
   </div>
-
-  <div class="row justify-content-center">
-      <div class="col-lg-9 col-md-12">
-        <div class="card">
-          <div class="card-header card-header-tabs card-header-warning">
-            <div class="nav-tabs-navigation">
-              <div class="nav-tabs-wrapper">
-                <span class="nav-tabs-title">CONCURRENCY GRAPH ANALYSIS (HASHTAGS)</span>
-                <ul class="nav nav-tabs" data-tabs="tabs">
-                  <li class="nav-item">
-                    <a class="nav-link active" href="#adjacency_hash" data-toggle="tab">
-                      Most Connected
-                      <div class="ripple-container"></div>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link " href="#degree_hash" data-toggle="tab">
-                      Degree Centrality
-                      <div class="ripple-container"></div>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link " href="#betweenness_hash" data-toggle="tab">
-                      Betweenness Centrality
-                      <div class="ripple-container"></div>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link " href="#closeness_hash" data-toggle="tab">
-                      Closeness Centrality
-                      <div class="ripple-container"></div>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link " href="#clustering_hash" data-toggle="tab">
-                      Clustering Coefficient
-                      <div class="ripple-container"></div>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="tab-content">
-              <div class="tab-pane active" id="adjacency_hash">
-                <table class="table">
-                  <thead class="text-warning">
-                      <th>Hashtag</th>
-                      <th>Hashtag</th>
-                      <th>Weight</th>
-                  </thead>
-                  <tbody>
-                    {% for row in concurreny_hashtags.adjacency %}
-                  <tr>
-                    {% for col in row %}
-                      <td>{{ col }}</td>
-                    {% endfor %}
-                  </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              <div class="tab-pane " id="degree_hash">
-                <table class="table">
-                  <thead class="text-warning">
-                    {% for title in concurreny_entities.title %}
-                      <th>{{ title }}</th>
-                    {% endfor %}
-                  </thead>
-                  <tbody>
-                    {% for row in concurreny_hashtags.degree %}
-                  <tr>
-                    {% for col in row %}
-                      <td>{{ col }}</td>
-                    {% endfor %}
-                  </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              <div class="tab-pane " id="betweenness_hash">
-                <table class="table">
-                  <thead class="text-warning">
-                    {% for title in concurreny_entities.title %}
-                      <th>{{ title }}</th>
-                    {% endfor %}
-                  </thead>
-                  <tbody>
-                    {% for row in concurreny_hashtags.betweenness %}
-                  <tr>
-                      {% for col in row %}
-                        <td>{{ col }}</td>
-                      {% endfor %}
-                  </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              <div class="tab-pane " id="closeness_hash">
-                <table class="table">
-                  <thead class="text-warning">
-                    {% for title in concurreny_entities.title %}
-                      <th>{{ title }}</th>
-                    {% endfor %}
-                  </thead>
-                  <tbody>
-                    {% for row in concurreny_hashtags.closeness %}
-                  <tr>
-                    {% for col in row %}
-                      <td>{{ col }}</td>
-                    {% endfor %}
-                  </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              <div class="tab-pane " id="clustering_hash">
-                <table class="table">
-                  <thead class="text-warning">
-                    {% for title in concurreny_entities.title %}
-                      <th>{{ title }}</th>
-                    {% endfor %}
-                  </thead>
-                  <tbody>
-                    {% for row in concurreny_hashtags.clustering %}
-                  <tr>
-                    {% for col in row %}
-                      <td>{{ col }}</td>
-                    {% endfor %}
-                  </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              </div>
-            </div>
-          </div>
-        </div>
-  </div>
-
 
     <div class="row justify-content-center">
       <div class="col-lg-11 col-md-12">
