@@ -17,6 +17,103 @@
     </div>
   
     <div class="row justify-content-center">
+      <div class="col-lg-3 col-md-12">
+        <div class="card">
+          <div class="card-header card-header-info">
+            <h4 class="card-title">Hashtags</h4>
+            <p class="card-category">Top {{ hashtag_data.totalCount }} Hashtags</p>
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-hover">
+              <thead class="text-warning">
+                <th> </th>
+                <th>Hashtag</th>
+                <th>Occurance</th>
+              </thead>
+              <tbody>
+                {% for hashtag in hashtag_data.combined %}
+                  <tr>
+                    {% for column in hashtag %}
+                      <td>{{ column }}</td>
+                    {% endfor %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="card">
+          <div class="card-header card-header-tabs card-header-danger">
+            <div class="nav-tabs-navigation">
+              <div class="nav-tabs-wrapper">
+                <span class="nav-tabs-title">NEWS HEADLINES</span>
+                <ul class="nav nav-tabs" data-tabs="tabs">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#cnn" data-toggle="tab">
+                      <i class="material-icons">local_library</i> CNN
+                      <div class="ripple-container"></div>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#breitbart" data-toggle="tab">
+                      <i class="material-icons">local_library</i> Breitbart News
+                      <div class="ripple-container"></div>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#wpost" data-toggle="tab">
+                      <i class="material-icons">local_library</i> The Washington Post
+                      <div class="ripple-container"></div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane active" id="cnn">
+                <table class="table">
+                  <tbody>
+                    {% for news in headlines.cnn %}
+                  <tr>
+                      <td>{{ news }}</td>
+                  </tr>
+                {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="tab-pane" id="breitbart">
+                <table class="table">
+                  <tbody>
+                    {% for news in headlines.breitbart %}
+                  <tr>
+                      <td>{{ news }}</td>
+                  </tr>
+                {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="tab-pane" id="wpost">
+                <table class="table">
+                  <tbody>
+                    {% for news in headlines.washington %}
+                  <tr>
+                      <td>{{ news }}</td>
+                  </tr>
+                {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="row justify-content-center">
     <div class="col-lg-11 col-md-12">
       <div class="card">
         <div class="card-header card-header-success">
@@ -383,102 +480,7 @@
       </div>
   </div>
 
-  <div class="row justify-content-center">
-    <div class="col-lg-3 col-md-12">
-      <div class="card">
-        <div class="card-header card-header-info">
-          <h4 class="card-title">Hashtags</h4>
-          <p class="card-category">Top {{ hashtag_data.totalCount }} Hashtags</p>
-        </div>
-        <div class="card-body table-responsive">
-          <table class="table table-hover">
-            <thead class="text-warning">
-              <th> </th>
-              <th>Hashtag</th>
-              <th>Occurance</th>
-            </thead>
-            <tbody>
-              {% for hashtag in hashtag_data.combined %}
-                <tr>
-                  {% for column in hashtag %}
-                    <td>{{ column }}</td>
-                  {% endfor %}
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-6 col-md-12">
-      <div class="card">
-        <div class="card-header card-header-tabs card-header-danger">
-          <div class="nav-tabs-navigation">
-            <div class="nav-tabs-wrapper">
-              <span class="nav-tabs-title">NEWS HEADLINES</span>
-              <ul class="nav nav-tabs" data-tabs="tabs">
-                <li class="nav-item">
-                  <a class="nav-link active" href="#cnn" data-toggle="tab">
-                    <i class="material-icons">local_library</i> CNN
-                    <div class="ripple-container"></div>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#breitbart" data-toggle="tab">
-                    <i class="material-icons">local_library</i> Breitbart News
-                    <div class="ripple-container"></div>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#wpost" data-toggle="tab">
-                    <i class="material-icons">local_library</i> The Washington Post
-                    <div class="ripple-container"></div>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="tab-content">
-            <div class="tab-pane active" id="cnn">
-              <table class="table">
-                <tbody>
-                  {% for news in headlines.cnn %}
-                <tr>
-                    <td>{{ news }}</td>
-                </tr>
-              {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            <div class="tab-pane" id="breitbart">
-              <table class="table">
-                <tbody>
-                  {% for news in headlines.breitbart %}
-                <tr>
-                    <td>{{ news }}</td>
-                </tr>
-              {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            <div class="tab-pane" id="wpost">
-              <table class="table">
-                <tbody>
-                  {% for news in headlines.washington %}
-                <tr>
-                    <td>{{ news }}</td>
-                </tr>
-              {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
 
     <div class="row justify-content-center">
       <div class="col-lg-11 col-md-12">
