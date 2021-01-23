@@ -141,11 +141,16 @@ def collectIndices(graph_type):
     
     cur = dbconn.cursor()
     query = 'SELECT source,destination,weight FROM concurrency_adjacency WHERE weight is not null AND type = \'%s\' ORDER BY weight DESC LIMIT 10'%(graph_type)
+    print(query)
     cur.execute(query)  
     adj = cur.fetchall()
     indices["adjacency"]=[]
     for r in adj:
         indices["adjacency"].append(list(r))
+    print("************************************")
+    print(indices["adjacency"])
+    print("************************************")
+
     dbconn.commit()    
     cur.close() 
     return indices

@@ -29,7 +29,10 @@ def weekly(request):
     concurreny_mentions = ConcurrenyNetwork.collectIndices("mentions")
     concurreny_hashtags = ConcurrenyNetwork.collectIndices("tags")
     concurreny_entities["title"] = ["Vertex","Index","Most Weighted Neighbours (weight)"]
-    print(concurreny_entities["adjacency"])   
+    print("ENTITY ADJ:",concurreny_entities["adjacency"])   
+    print("MENTIONS ADJ:",concurreny_mentions["adjacency"])   
+    print("HASHTAGS ADJ:",concurreny_hashtags["adjacency"])   
+
     
     #Hashtag table
     hashDF = RetrieveTweets.getTopHashtags(tweets,count=10)
