@@ -26,4 +26,6 @@ urlpatterns = [
     path('', umv.home, name="welcome"),
     path('user/', include("UserManagement.urls")),
     path('analytics/', include("main.urls")),
+    path('error/', mv.errorpage, name="errorpage"),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

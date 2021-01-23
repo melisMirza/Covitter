@@ -10,6 +10,9 @@ import json
 from datetime import datetime
 from datetime import timedelta
 # Create your views here.
+
+def errorpage(request):
+    return render(request, "main/Error.html",{})
 def weekly(request):
     now = datetime.now()
     lastweek = now - timedelta(days=7)
