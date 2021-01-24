@@ -82,7 +82,7 @@ def weekly(request):
                         except IndexError:
                             pass
         except:
-            pass
+            headlines = {"cnn":[["No available news to display"]],"breitbart":["No available news to display"],"washington":["No available news to display"]}
 
         #Tweet Content Table
         post_data_df = tweets[['date','orig_content','favourite_count','retweet_count','sentiment']]
@@ -186,7 +186,7 @@ def searchResults(request):
                         except IndexError:
                             pass
         except:
-            pass
+            headlines = {"cnn":[["No available news to display"]],"breitbart":["No available news to display"],"washington":["No available news to display"]}
 
         #Tweet Content Table
         post_data_df = tweets[['date','orig_content','favourite_count','retweet_count','sentiment']]
