@@ -57,7 +57,7 @@ def weekly(request):
         print(mentions)
 
         #News
-        headlines = {"cnn":[],"breitbart":[],"washington":[]}
+        headlines = {"cnn":[["No available news to display"]],"breitbart":["No available news to display"],"washington":["No available news to display"]}
         try:   
             if len(tweets['date']) > 0:
                 dates = list(set(tweets['date']))
@@ -68,6 +68,7 @@ def weekly(request):
                 breitbart_data = NewsHeadlines.getHeadlines(source="breitbart-news",fromDate = news_from,toDate = news_to)
                 washington_data = NewsHeadlines.getHeadlines(source="the-washington-post",fromDate = news_from,toDate = news_to)
                 if len(cnn_data) > 0:
+                    headlines = {"cnn":[],"breitbart":[],"washington":[]}
                     for i in range(10):
                         try:
                             headlines["cnn"].append(Cleaner.cleanForView(cnn_data[i]["title"]))
@@ -161,7 +162,7 @@ def searchResults(request):
         print(mentions)
 
         #News
-        headlines = {"cnn":[],"breitbart":[],"washington":[]}
+        headlines = {"cnn":[["No available news to display"]],"breitbart":["No available news to display"],"washington":["No available news to display"]}
         try:   
             if len(tweets['date']) > 0:
                 dates = list(set(tweets['date']))
@@ -172,6 +173,7 @@ def searchResults(request):
                 breitbart_data = NewsHeadlines.getHeadlines(source="breitbart-news",fromDate = news_from,toDate = news_to)
                 washington_data = NewsHeadlines.getHeadlines(source="the-washington-post",fromDate = news_from,toDate = news_to)
                 if len(cnn_data) > 0:
+                    headlines = {"cnn":[],"breitbart":[],"washington":[]}
                     for i in range(10):
                         try:
                             headlines["cnn"].append(Cleaner.cleanForView(cnn_data[i]["title"]))
@@ -205,6 +207,7 @@ def searchResults(request):
     except:
         return redirect("/error")
 
+#redundant
 @login_required(login_url='/user/login')
 def dateSearch(request):
     if request.method == "POST":
@@ -215,6 +218,7 @@ def dateSearch(request):
 
     return render(request, "main/DateSearch.html",{})
 
+#redundant
 @login_required(login_url='/user/login')
 def dateSearchResults(request):
     from_date = str(request.GET['from'])
@@ -279,6 +283,7 @@ def dateSearchResults(request):
 
     #return render(request, "main/DateSearchResults.html",{"post_data":post_data})
 
+#redundant
 @login_required(login_url='/user/login')
 def wordSearch(request):
     if request.method == "POST":
@@ -289,6 +294,7 @@ def wordSearch(request):
 
     return render(request, "main/WordSearch.html",{})
 
+#redundant
 @login_required(login_url='/user/login')
 def wordSearchResults(request):
     search_words = request.GET['search']
@@ -353,6 +359,7 @@ def wordSearchResults(request):
     post_data["count"] = totalPosts
     return render(request, "main/WordSearchResults.html",{"post_data":post_data,"hashtag_data":hashtag_data, "headlines":headlines,"sentiments":sentiments, "entities":entities, "mentions":mentions})
 
+#redundant
 @login_required(login_url='/user/login')
 def userAccount(request):
     try:

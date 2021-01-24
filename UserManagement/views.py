@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 
 # Create your views here.
@@ -78,7 +79,12 @@ def signup(request):
     except:
         return redirect("/error")
 
-
+def logoutUser(request):
+    try:
+        logout(request)
+        return render(request, "UserManagement/Welcome.html" ,{})
+    except:
+        return redirect("/error")
 
 '''
 def loginUser(request):
