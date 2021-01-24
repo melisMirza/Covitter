@@ -57,7 +57,7 @@ def weekly(request):
         print(mentions)
 
         #News
-        headlines = {"cnn":[["No available news to display"]],"breitbart":["No available news to display"],"washington":["No available news to display"]}
+        headlines = {"cnn":["No available news to display"],"breitbart":["No available news to display"],"washington":["No available news to display"]}
         try:   
             if len(tweets['date']) > 0:
                 dates = list(set(tweets['date']))
@@ -83,7 +83,7 @@ def weekly(request):
                         except IndexError:
                             pass
         except:
-            headlines = {"cnn":[["No available news to display"]],"breitbart":["No available news to display"],"washington":["No available news to display"]}
+            headlines = {"cnn":["No available news to display"],"breitbart":["No available news to display"],"washington":["No available news to display"]}
 
         #Tweet Content Table
         post_data_df = tweets[['date','orig_content','favourite_count','retweet_count','sentiment']]
@@ -162,7 +162,7 @@ def searchResults(request):
         print(mentions)
 
         #News
-        headlines = {"cnn":[["No available news to display"]],"breitbart":["No available news to display"],"washington":["No available news to display"]}
+        headlines = {"cnn":["No available news to display"],"breitbart":["No available news to display"],"washington":["No available news to display"]}
         try:   
             if len(tweets['date']) > 0:
                 dates = list(set(tweets['date']))
@@ -188,7 +188,7 @@ def searchResults(request):
                         except IndexError:
                             pass
         except:
-            headlines = {"cnn":[["No available news to display"]],"breitbart":["No available news to display"],"washington":["No available news to display"]}
+            headlines = {"cnn":["No available news to display"],"breitbart":["No available news to display"],"washington":["No available news to display"]}
 
         #Tweet Content Table
         post_data_df = tweets[['date','orig_content','favourite_count','retweet_count','sentiment']]
