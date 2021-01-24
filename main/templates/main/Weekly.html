@@ -670,7 +670,8 @@
             <p class="card-category">Content {{ post_data.count }} The Search</p>
           </div>
           <div class="card-body table-responsive">
-            <table id="tweets_table" class="display">
+            <input id='tweet_search' onkeyup='searchTable()' type='text' class="form-control" placeholder="Search..." style="width:200px; align-items: left;">
+            <table id="tweets_table" class="table table-hover">
               <thead class="text-warning">
                 <th> </th>
                 <th>Post Date</th>
@@ -689,6 +690,29 @@
                 {% endfor %}
               </tbody>
             </table>
+            <script>
+              function searchTable() {
+                  var input, filter, found, table, tr, td, i, j;
+                  input = document.getElementById("tweet_search");
+                  filter = input.value.toUpperCase();
+                  table = document.getElementById("tweets_table");
+                  tr = table.getElementsByTagName("tr");
+                  for (i = 0; i < tr.length; i++) {
+                      td = tr[i].getElementsByTagName("td");
+                      for (j = 0; j < td.length; j++) {
+                          if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                              found = true;
+                          }
+                      }
+                      if (found) {
+                          tr[i].style.display = "";
+                          found = false;
+                      } else {
+                          tr[i].style.display = "none";
+                      }
+                  }
+              }
+              </script>
           </div>
         </div>
       </div>
