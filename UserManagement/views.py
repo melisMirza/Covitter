@@ -82,7 +82,7 @@ def signup(request):
 def logoutUser(request):
     try:
         logout(request)
-        return render(request, "UserManagement/Welcome.html" ,{})
+        return redirect("/")
     except:
         return redirect("/error")
 
