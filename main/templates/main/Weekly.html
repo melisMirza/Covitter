@@ -189,8 +189,8 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link " href="#clustering" data-toggle="tab">
-                    Clustering Coefficient
+                  <a class="nav-link " href="#eigenvector" data-toggle="tab">
+                    Eigenvector Centrality
                     <div class="ripple-container"></div>
                   </a>
                 </li>
@@ -272,7 +272,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="tab-pane " id="clustering">
+            <div class="tab-pane " id="eigenvector">
               <table class="table">
                 <thead class="text-warning">
                   {% for title in concurreny_entities.title %}
@@ -280,7 +280,7 @@
                   {% endfor %}
                 </thead>
                 <tbody>
-                  {% for row in concurreny_entities.clustering %}
+                  {% for row in concurreny_entities.eigenvector %}
                 <tr>
                   {% for col in row %}
                     <td>{{ col }}</td>
@@ -372,8 +372,8 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link " href="#clustering_hash" data-toggle="tab">
-                    Clustering Coefficient
+                  <a class="nav-link " href="#eigenvector_hash" data-toggle="tab">
+                    Eigenvector Centrality
                     <div class="ripple-container"></div>
                   </a>
                 </li>
@@ -455,7 +455,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="tab-pane " id="clustering_hash">
+            <div class="tab-pane " id="eigenvector_hash">
               <table class="table">
                 <thead class="text-warning">
                   {% for title in concurreny_entities.title %}
@@ -463,7 +463,7 @@
                   {% endfor %}
                 </thead>
                 <tbody>
-                  {% for row in concurreny_hashtags.clustering %}
+                  {% for row in concurreny_hashtags.eigenvector %}
                 <tr>
                   {% for col in row %}
                     <td>{{ col }}</td>
@@ -555,8 +555,8 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link " href="#clustering_ment" data-toggle="tab">
-                    Clustering Coefficient
+                  <a class="nav-link " href="#eigenvector_ment" data-toggle="tab">
+                    Eigenvector Centrality
                     <div class="ripple-container"></div>
                   </a>
                 </li>
@@ -638,7 +638,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="tab-pane " id="clustering_ment">
+            <div class="tab-pane " id="eigenvector_ment">
               <table class="table">
                 <thead class="text-warning">
                   {% for title in concurreny_entities.title %}
@@ -646,7 +646,7 @@
                   {% endfor %}
                 </thead>
                 <tbody>
-                  {% for row in concurreny_mentions.clustering %}
+                  {% for row in concurreny_mentions.eigenvector %}
                 <tr>
                   {% for col in row %}
                     <td>{{ col }}</td>

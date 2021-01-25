@@ -87,12 +87,15 @@ def collectIndices(graph_type):
     nodes = []
     dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     cur = dbconn.cursor()
-    query = 'SELECT node,eigenvector_centrality FROM concurrency_indices WHERE eigenvector_centrality is not null AND type = \'%s\' ORDER BY eigenvector_centrality DESC LIMIT 10'%(graph_type)
-    cur.execute(query)  
-    eigen = cur.fetchall()
-    for r in eigen:
-        nodes.append(r[0])
-        indices["eigenvector"].append(list(r))
+    try:
+        query = 'SELECT node,eigenvector_centrality FROM concurrency_indices WHERE eigenvector_centrality is not null AND type = \'%s\' ORDER BY eigenvector_centrality DESC LIMIT 10'%(graph_type)
+        cur.execute(query)  
+        eigen = cur.fetchall()
+        for r in eigen:
+            nodes.append(r[0])
+            indices["eigenvector"].append(list(r))
+    except:
+        indices["eigenvector"].append([])
     query = 'SELECT node,degree_centrality FROM concurrency_indices WHERE degree_centrality is not null AND type = \'%s\' ORDER BY degree_centrality DESC LIMIT 10'%(graph_type)
     cur.execute(query)  
     degree = cur.fetchall()
