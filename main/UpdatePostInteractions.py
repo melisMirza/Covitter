@@ -95,8 +95,8 @@ Access_Token_Secret = "lS2FkFXPLdmKMToCDY2BrLHOh6d3cJJVk0OUYjkgBxLjS"
 tagme.GCUBE_TOKEN = "24d4b5ec-ce55-4be2-a530-75f1d03fbc76-843339462"
 
 now = datetime.now()
-now = now - timedelta(days=5)
-lastmonth = now - timedelta(days=10)
+#now = now - timedelta(days=5)
+lastmonth = now - timedelta(days=5)
 
 today = now.strftime("%Y-%m-%d")
 lastmonth_date = lastmonth.strftime("%Y-%m-%d")
