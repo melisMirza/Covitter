@@ -138,13 +138,7 @@ def searchResults(request):
         ## Entities
         entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
         print(entities)
-        '''
-        ##network indices
-        #graph_types are: 'mentions','entities','tags'
-        concurreny_entities = ConcurrenyNetwork.collectIndices("entities")
-        concurreny_entities["title"] = ["Vertex","Index","Most Weighted Neighbours (weight)"]
-        print(concurreny_entities)
-        '''
+
         
         #Hashtag table
         hashDF = RetrieveTweets.getTopHashtags(tweets,count=10)

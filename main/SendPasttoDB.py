@@ -48,8 +48,8 @@ api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
 now = datetime.now()
 now = now - timedelta(days=1)
 p_d = now.strftime("%Y-%m-%d")
-p_d = "2020-09-01"
-while p_d != "2020-08-01":
+p_d = "2020-04-01"
+while p_d != "2020-03-01":
     print("*******************",p_d,"*******************")
     day_before = datetime.strptime(p_d,"%Y-%m-%d")
     day_before = day_before - timedelta(days=1)

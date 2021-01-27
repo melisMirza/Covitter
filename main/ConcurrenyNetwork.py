@@ -114,13 +114,7 @@ def collectIndices(graph_type):
     for r in closeness:
         nodes.append(r[0])
         indices["closeness"].append(list(r))
-    query = 'SELECT node,clustering_coefficient FROM concurrency_indices WHERE clustering_coefficient is not null AND type = \'%s\' ORDER BY clustering_coefficient DESC LIMIT 10'%(graph_type)
-    cur.execute(query)  
-    clustering = cur.fetchall()
-    for r in clustering:
-        nodes.append(r[0])
-        indices["clustering"].append(list(r))
-    dbconn.commit() 
+
 
     nodes = list(set(nodes))
     neighbourhood = {}
