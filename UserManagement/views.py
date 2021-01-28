@@ -30,8 +30,8 @@ def loginUser(request):
                 login(request,user)
                 return redirect("/analytics")
             else:
-                messages.info(request, "Username or password is incorrect!")
-                return render(request, "UserManagement/Login.html" ,{"form":form})
+                error_message = "Username or password is incorrect!"
+                return render(request, "UserManagement/Login.html" ,{"form":form,"error_message":error_message})
 
         return render(request, "UserManagement/Login.html" ,{"form":form})
     except:
