@@ -6,10 +6,13 @@ from datetime import timedelta
 env = environ.Env()
 environ.Env.read_env()
 '''
-def getHeadlines(source,fromDate='2021-01-11',toDate='2021-01-31'):
+def getHeadlines(source,fromDate,toDate):
     #newsapi = NewsApiClient(api_key=env("NEWS_API_KEY"))
     newsapi = NewsApiClient(api_key=os.environ['NEWS_API_KEY'])
-
+    if toDate == "":
+        toDate = str(datetime.now()).split(' ')[0]
+    if fromDate == "":
+        fromDate = str(datetime.now()- timedelta(days=1)).split(' ')[0]
     #print("from:",fromDate)
     #print("toDate:",toDate)
     available = str(datetime.now() - timedelta(days=30)).split(' ')[0]

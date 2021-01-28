@@ -21,12 +21,11 @@
             <button type="submit" style="width: 200px;" name="save" class="btn btn-secondary" method ="post" action="Login.html">Login</button>
         </form>
     </div>
-    <div class="row align-items-center justify-content-center">
+    <div class="row justify-content-center">
         {% csrf_token %} 
-        {% for message  in messages %}
-            <p>{{ message }}</p>
-        {% endfor%}
-
+        {% if error_message %}
+            <p class="bg-danger p-d ml-b">{{ error_message }}</p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
