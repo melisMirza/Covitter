@@ -31,5 +31,4 @@ def getHeadlines(source,fromDate,toDate):
                                         to=toDate,
                                         language='en',
                                         sort_by='popularity')
-
     return all_articles["articles"]

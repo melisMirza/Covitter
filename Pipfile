@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+psycopg2-binary = ">=2.8"
+django-environ = "*"
+tweepy = "*"
+pandas = "*"
+nltk = "*"
+wordcloud = "*"
+textblob = "*"
+emot = "*"
+tagme = "*"
+requests = "*"
+networkx = "*"
+matplotlib = "*"
+newsapi-python = "*"
+numpy = "*"
+configparser = "*"
+snscrape = "*"
+dj-database-url = "*"
+Django = ">=3.0,<4.0"
+gunicorn = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.7"
