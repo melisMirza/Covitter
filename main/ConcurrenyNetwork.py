@@ -121,6 +121,7 @@ def collectIndices(graph_type):
     print("total", len(nodes), "nodes")
     for n in nodes:
         combined = []
+        n = n.replace('\'','\'\'')
         query = 'SELECT destination,weight FROM concurrency_adjacency WHERE source = \'%s\' AND type = \'%s\' ORDER BY weight DESC LIMIT 5' %(n,graph_type)
         cur.execute(query)  
         neighbours = cur.fetchall()

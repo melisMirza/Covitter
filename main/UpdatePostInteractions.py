@@ -94,69 +94,72 @@ Access_Token = "251584559-knqwY4QZn8G6qmVUba2P9yJJ0aOhRPPMQj5yjjra"
 Access_Token_Secret = "lS2FkFXPLdmKMToCDY2BrLHOh6d3cJJVk0OUYjkgBxLjS"
 tagme.GCUBE_TOKEN = "24d4b5ec-ce55-4be2-a530-75f1d03fbc76-843339462"
 
-now = datetime.now()
-now = now - timedelta(days=5)
-lastmonth = now - timedelta(days=10)
+while True:
+    try:
+        now = datetime.now()
+        #now = now - timedelta(days=5)
+        end_date = now - timedelta(days=5)
 
-today = now.strftime("%Y-%m-%d")
-lastmonth_date = lastmonth.strftime("%Y-%m-%d")
+        today = now.strftime("%Y-%m-%d")
+        end_date_dt = end_date.strftime("%Y-%m-%d")
 
+        #Authenticate
+        auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)
+        auth.set_access_token(Access_Token, Access_Token_Secret)
+        api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
 
-
-#Authenticate
-auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)
-auth.set_access_token(Access_Token, Access_Token_Secret)
-api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
-
-dbconn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
-curget = dbconn.cursor()
-query = 'SELECT post_id FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ' %(lastmonth_date,today)
-curget.execute(query)  
-output = curget.fetchall()
-dbconn.commit() 
-curget.close()
-ids=[]
-for i in output:
-    (p_id,) = i
-    ids.append(p_id)
-print(len(ids))
-
-end = False
-startIndex = 0
-batch = 30
-endIndex = startIndex + batch
-while not end:
-    if endIndex > len(ids):
-        endIndex = len(ids)
-        end = True
-    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
-
-    cur = conn.cursor()
-    tweetContents = api.statuses_lookup(id_=ids[startIndex:endIndex],tweet_mode="extended")
-    for tw in tweetContents:
-        #print(tw._json)
-        post_id=tw.id_str
-        try:
-            retweet_count = tw._json["retweeted_status"]["retweet_count"]
-            favorite_count = tw._json["retweeted_status"]["favorite_count"]
-        except:
-            retweet_count = tw._json["retweet_count"]
-            favorite_count = tw._json["favorite_count"]
-            
-        query = 'UPDATE twitter SET favourite_count=%d,retweet_count=%d WHERE post_id=\'%s\' RETURNING id' %(favorite_count,retweet_count,post_id)
-        print("QUERY:",query)
-        cur.execute(query)  
-        output = cur.fetchone()
-        print("OUTPUT:",output)
-        conn.commit() 
-        print("\n")
-    startIndex += batch
-    endIndex = startIndex + batch
-    cur.close()
+        dbconn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+        curget = dbconn.cursor()
+        query = 'SELECT post_id FROM twitter WHERE post_date >= \'%s\' AND post_date < \'%s\' ORDER BY id DESC' %(end_date_dt,today)
+        curget.execute(query)  
+        output = curget.fetchall()
+        dbconn.commit() 
+        curget.close()
+        ids=[]
+        for i in output:
+            (p_id,) = i
+            ids.append(p_id)
+        print(len(ids))
 
 
+        end = False
+        startIndex = 0
+        batch = 30
+        endIndex = startIndex + batch
+        while not end:
+            if endIndex > len(ids):
+                endIndex = len(ids)
+                end = True
+            conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+
+            cur = conn.cursor()
+            tweetContents = api.statuses_lookup(id_=ids[startIndex:endIndex],tweet_mode="extended")
+            for tw in tweetContents:
+                #print(tw._json)
+                post_id=tw.id_str
+                try:
+                    retweet_count = tw._json["retweeted_status"]["retweet_count"]
+                    favorite_count = tw._json["retweeted_status"]["favorite_count"]
+                except:
+                    retweet_count = tw._json["retweet_count"]
+                    favorite_count = tw._json["favorite_count"]
+                    
+                query = 'UPDATE twitter SET favourite_count=%d,retweet_count=%d WHERE post_id=\'%s\' RETURNING id' %(favorite_count,retweet_count,post_id)
+                print("QUERY:",query)
+                cur.execute(query)  
+                output = cur.fetchone()
+                print("OUTPUT:",output)
+                conn.commit() 
+                print("\n")
+            startIndex += batch
+            endIndex = startIndex + batch
+            cur.close()
+    except:
+        pass
 
 
 
 
-   
+
+
+    
