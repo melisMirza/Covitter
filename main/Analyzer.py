@@ -13,10 +13,12 @@ from textblob import TextBlob
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import tagme, collections
 import environ
-''' % LOCAL TEST %
-env = environ.Env()
-environ.Env.read_env()
-'''
+
+######
+#ANALYSIS METHODS
+######
+
+# Returns lemmatized version of a text
 def lemmatization(text):
     nltk.download('wordnet')
     nltk.download('averaged_perceptron_tagger')
@@ -28,6 +30,7 @@ def lemmatization(text):
 
     return text_lemmatized
 
+# Analyzes the sentiment of a text, using the chosen tool, returns a sentiment score between -1 and 1
 def analyzeSentiment(text,tool):
     sentimentScore = 0.0
     if tool == "textblob":
@@ -39,6 +42,7 @@ def analyzeSentiment(text,tool):
         sentimentScore = polDict["compound"]
     return sentimentScore
 
+# Categorizes the sentiment score to : Very Negative, Negative, Neutral, Positive, Very Positive
 def getSentimentResult(sentiment_score):
     
     if sentiment_score >= 0.25 and sentiment_score < 0.75:
@@ -54,6 +58,7 @@ def getSentimentResult(sentiment_score):
     
     return sentiment
 
+# Identifies the entities in a given text, using Tagme
 def getEntities(text,input_type="text"):
     #tagme.GCUBE_TOKEN = env("TAGME_TOKEN")
     tagme.GCUBE_TOKEN = os.environ['TAGME_TOKEN']
@@ -78,6 +83,7 @@ def getEntities(text,input_type="text"):
         pass        
     return entities
 
+# Returns the most common {result_count} many entities of a given entity list, returns a dataframe
 def getTopEntities(entities,result_count=15):
     allEntities = []
     
@@ -100,6 +106,7 @@ def getTopEntities(entities,result_count=15):
         output.append([e_keys[r], entDict_inv[e_keys[r]]])
     return output
 
+# Returns the most common {result_count} many mentioned users of a given mentions list, returns a dataframe
 def getTopMentions(mentions,result_count=15):
     allMentions = []
     
@@ -107,12 +114,10 @@ def getTopMentions(mentions,result_count=15):
     for eg in mentions:
         temp = []
         if "str" in str(type(eg)):
-            #allEntities += eg.split('||')      
             temp = eg.split('||')
             for e in temp:
                 if e != '':
                     allMentions.append(e.strip())
-    #allEntities.remove('')
     mentDict = collections.Counter(allMentions)
     mentDict_inv = {k: v for k, v in sorted(mentDict.items(), key=lambda item: item[1],reverse=True)}
     output = [['Mention', 'Occurance']]

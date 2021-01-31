@@ -1,3 +1,4 @@
+# TWEET OBJECT
 class Tweet:
     def __init__(self, text="", post_id="",user_name="",postDate="", hashtags=[],mentions=[],favourite_count=0,retweet_count=0,is_retweet="false"):
         self.text = text

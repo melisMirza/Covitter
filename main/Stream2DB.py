@@ -13,6 +13,12 @@ import Cleaner, Analyzer
 from Tweet import Tweet
 from pathlib import Path
 
+#####
+# THE SCHEDULED JOB FOR STREAMING DATA TO DB
+# 50 TWEETS PER 10 MIN
+#####
+
+
 class Listener(StreamListener):
 
     def on_status(self, status):

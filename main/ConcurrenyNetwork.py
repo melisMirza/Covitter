@@ -5,6 +5,10 @@ import pandas as pd
 #from . import Analyzer, RetrieveTweets
 import psycopg2, os
 
+#####
+# CO-OCCURANCE GRAPH INDICES and ADJACENCY MATRIX
+#####
+
 def formatDate(origDate):
     date = origDate
     if origDate.strip() != "":
@@ -13,7 +17,6 @@ def formatDate(origDate):
         month = [lambda:str(dl[0]),lambda:'0'+str(dl[0])][len(str(dl[0])) == 1]()
         date = str(dl[2]) + month + day
     return date
-
 
 #creates undirected, unweighted graph
 def createUDUWnetork(tweets):
@@ -81,12 +84,13 @@ def eigenvectorCentrality(G):
     und_eigen = nx.eigenvector_centrality(G)
     return und_eigen
 
-
+#collects centrality indices of the graph from database, returns dictionary
 def collectIndices(graph_type):
     indices = {"eigenvector":[],"degree":[],"betweenness":[],"closeness":[],"clustering":[]}
     nodes = []
     dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     cur = dbconn.cursor()
+    
     try:
         query = 'SELECT node,eigenvector_centrality FROM concurrency_indices WHERE eigenvector_centrality is not null AND type = \'%s\' ORDER BY eigenvector_centrality DESC LIMIT 10'%(graph_type)
         cur.execute(query)  
@@ -96,18 +100,21 @@ def collectIndices(graph_type):
             indices["eigenvector"].append(list(r))
     except:
         indices["eigenvector"].append([])
+    
     query = 'SELECT node,degree_centrality FROM concurrency_indices WHERE degree_centrality is not null AND type = \'%s\' ORDER BY degree_centrality DESC LIMIT 10'%(graph_type)
     cur.execute(query)  
     degree = cur.fetchall()
     for r in degree:
         nodes.append(r[0])
         indices["degree"].append(list(r))
+    
     query = 'SELECT node,betweenness_centrality FROM concurrency_indices WHERE betweenness_centrality is not null AND type = \'%s\' ORDER BY betweenness_centrality DESC LIMIT 10'%(graph_type)
     cur.execute(query)  
     betweenness = cur.fetchall()
     for r in betweenness:
         nodes.append(r[0])
         indices["betweenness"].append(list(r))
+    
     query = 'SELECT node,closeness_centrality FROM concurrency_indices WHERE closeness_centrality is not null AND type = \'%s\' ORDER BY closeness_centrality DESC LIMIT 10'%(graph_type)
     cur.execute(query)  
     closeness = cur.fetchall()
@@ -115,14 +122,14 @@ def collectIndices(graph_type):
         nodes.append(r[0])
         indices["closeness"].append(list(r))
 
-
+    #find strongest edges of the node
     nodes = list(set(nodes))
     neighbourhood = {}
     print("total", len(nodes), "nodes")
     for n in nodes:
         combined = []
-        n = n.replace('\'','\'\'')
-        query = 'SELECT destination,weight FROM concurrency_adjacency WHERE source = \'%s\' AND type = \'%s\' ORDER BY weight DESC LIMIT 5' %(n,graph_type)
+        n_q = n.replace('\'','\'\'')
+        query = 'SELECT destination,weight FROM concurrency_adjacency WHERE source = \'%s\' AND type = \'%s\' ORDER BY weight DESC LIMIT 5' %(n_q,graph_type)
         cur.execute(query)  
         neighbours = cur.fetchall()
         for dest in neighbours:
@@ -139,15 +146,11 @@ def collectIndices(graph_type):
     
     cur = dbconn.cursor()
     query = 'SELECT source,destination,weight FROM concurrency_adjacency WHERE weight is not null AND type = \'%s\' ORDER BY weight DESC LIMIT 10'%(graph_type)
-    print(query)
     cur.execute(query)  
     adj = cur.fetchall()
     indices["adjacency"]=[]
     for r in adj:
         indices["adjacency"].append(list(r))
-    print("************************************")
-    print(indices["adjacency"])
-    print("************************************")
 
     dbconn.commit()    
     cur.close() 

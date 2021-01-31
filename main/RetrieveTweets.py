@@ -19,13 +19,13 @@ from datetime import datetime
 from datetime import timedelta
 from .Tweet import Tweet
 #from Tweet import Tweet
-
 import environ
-''' % LOCAL TESTS%
-env = environ.Env()
-environ.Env.read_env()
-'''
 
+#####
+# COLLECTS TWEET DATA FROM THE DATABASE
+#####
+
+#converts list to string, uses escape characters, token: ||
 def listToDbString(inputList):
     if len(inputList) == 0:
         dbString = "null"
@@ -37,23 +37,7 @@ def listToDbString(inputList):
         dbString = "\'" + dbString + "\'"
     return dbString
 
-def config(section,filename="database.ini"):
-    # create a parser
-    parser = ConfigParser()
-    # read config file
-    #path = os.getcwd() + '/' + filename
-    parser.read(filename)
-    db = {}
-    # get section, default to postgresql
-    if parser.has_section(section):
-        params = parser.items(section)
-        for param in params:
-            db[param[0]] = param[1]
-    else:
-        raise Exception('Section {0} not found in the {1} file'.format(section, filename))
-
-    return db
-
+#checks if there is any data for a certain period of time in the database --- DEPRECATED
 def checkDbForDate(startDate,endDate):
     #params = {"host":os.environ['POSTGRES_HOST'], "database":os.environ['POSTGRES_DATABASE'],"user": os.environ['POSTGRES_USER'],"password":os.environ['POSTGRES_PASSWORD']} #config('posts')
     #params = {"host":env("POSTGRES_HOST"), "database":env("POSTGRES_DATABASE"),"user": env("POSTGRES_USER"),"password":env("POSTGRES_PASSWORD")} #config('posts')
@@ -84,18 +68,10 @@ def checkDbForDate(startDate,endDate):
         date1 = date1 + timedelta(days=1)
     return exists
 
+# Queries db for tweets with filters: start date, end date, search words. Returns a data frame of tweets content
 def getTweetDF(option,fromDate="",toDate="",searchwords=""):
-    #wordlist = []; hashlist = [];mentionlist=[];sentimentlist=[];entlist=[]
-    '''
-    COUNT DISTINCT TWEETS 
-    SELECT "POST_CONTENT",COUNT("POST_CONTENT") AS Cp FROM "STREAMED_DATA"."TWITTER" GROUP BY "POST_CONTENT" ORDER BY Cp DESC
-
-    '''
 
     ##Get tweets from DB
-    #params = {"host":env("POSTGRES_HOST"), "database":env("POSTGRES_DATABASE"),"user": env("POSTGRES_USER"),"password":env("POSTGRES_PASSWORD")}
-    #params = {"host":os.environ['POSTGRES_HOST'], "database":os.environ['POSTGRES_DATABASE'],"user": os.environ['POSTGRES_USER'],"password":os.environ['POSTGRES_PASSWORD']} #config('posts')
-    #dbconn = psycopg2.connect(**params)
     dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     cur = dbconn.cursor()
     
@@ -236,6 +212,7 @@ def getTweetDF(option,fromDate="",toDate="",searchwords=""):
     tweetDF = pd.DataFrame.from_dict(dfDict)
     return tweetDF
 
+# Collect tweets using snscrape --- DEPRECATED
 def getTweetsFromPast(fromDate,toDate):
     ''' % LOCAL TESTS
     API_Key = env("TWIITER_API_KEY")
@@ -317,10 +294,9 @@ def getTweetsFromPast(fromDate,toDate):
 
     return tweets
 
+# format tweet data from snscrape --- DEPRECATED
 def preparePastTweets(tweets):
     dfDict = {"orig_content":[],"date":[],"lemma":[],"tags":[],"sentiment":[],"mentions":[],"favourite_count":[],"retweet_count":[],"entities":[]}
-    print(os.getcwd())
-    #tagme.GCUBE_TOKEN = env("TAGME_TOKEN")
     tagme.GCUBE_TOKEN = os.environ['TAGME_TOKEN']
 
     stopwords = Cleaner.getCustomStopwords(reference="custom", filename="main\CustomStopwords.txt")
@@ -371,6 +347,7 @@ def preparePastTweets(tweets):
 
     return tweetDF
 
+# returns most frequent hastags in a tweet list
 def getTopHashtags(tweets,count=15):
     
     hashtags = tweets['tags']
@@ -394,22 +371,9 @@ def getTopHashtags(tweets,count=15):
     
     return hashDF
 
+# prepare sentiment results for bar chart format
 def getSentimentResults(tweets):
-    '''
-    sentiment_dict = {}
-    sentiment_df = tweets[["date", "sentiment"]]
-    sentiments = [['Date', 'Positive', 'Neutral', 'Negative']]
-    dates = list(set(sentiment_df["date"]))
-    dates.sort()
-    for d in dates:
 
-        sentiment_dict[d] = {"Positive":0,"Negative":0,"Neutral":0}
-    for i in range(len(sentiment_df.index)):
-        sentiment_dict[tweets["date"][i]][tweets["sentiment"][i]] += 1
-    for d in dates:
-        sentiments.append([str(d), sentiment_dict[d]["Positive"],sentiment_dict[d]["Neutral"],sentiment_dict[d]["Negative"]])
-    return sentiments
-    '''
     sentiment_dict = {}
     sentiment_df = tweets[["date", "sentiment"]]
     sentiments = [['Date', 'Very Positive','Positive', 'Neutral', 'Negative','Very Negative']]

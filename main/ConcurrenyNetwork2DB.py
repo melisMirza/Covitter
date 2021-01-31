@@ -5,6 +5,12 @@ import pandas as pd
 import Analyzer, RetrieveTweets_schedule
 import psycopg2, os
 
+####
+# THE SCHEDULED JOB THAT FILLS "CONCURRENCY_ADJACENCY" AND "CONCURRENCY_INDICES" TABLES ON DATABASE 
+# USES WEEKLY DATA TO CREATE CO-OCCURENCE GRAPH
+# REPLACES NEW VALUES WITH THE OLD
+# FOR: ENTITIES, HASHTAGS, USER MENTIONS
+#####
 
 def formatDate(origDate):
     date = origDate
@@ -14,7 +20,6 @@ def formatDate(origDate):
         month = [lambda:str(dl[0]),lambda:'0'+str(dl[0])][len(str(dl[0])) == 1]()
         date = str(dl[2]) + month + day
     return date
-
 
 #creates undirected, weighted graph
 def createUDWnetork(tweets,graph_content):
@@ -87,94 +92,122 @@ def eigenvectorCentrality(G):
 def clusteringCoefficient(G):
     return nx.clustering(G)
 
-graph_types = ["mentions","tags"]#"entities","mentions","tags"]
+graph_types = ["entities","mentions","tags"]
 
 for t in graph_types:
+
     print("type:",t)
     tweets = RetrieveTweets_schedule.getTweetDF(option="thisweek")
     conc = createUDWnetork(tweets,graph_content=t)
     conc_edges,conc_weights = zip(*nx.get_edge_attributes(conc,'weight').items())
-
-    #conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
-    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+    
+    conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
+    
     del_query = 'DELETE FROM concurrency_adjacency where type=\'%s\''%(t)
     print(del_query)
     cur = conn.cursor()
     cur.execute(del_query)  
     conn.commit()
+    
+    # Adjacency Matrix
+    values = []
     for i in range(len(conc_edges)):
         (source,destination) = conc_edges[i]
-        query_adj = 'INSERT INTO concurrency_adjacency (source , destination, weight,type) VALUES (\'%s\',\'%s\',%d,\'%s\') RETURNING source' %(source.replace('\'','\'\''),destination.replace('\'','\'\''), conc_weights[i],t)
-        print(query_adj)
-        cur = conn.cursor()
-        cur.execute(query_adj)  
-        output = cur.fetchone()    
-        conn.commit() 
+        value = '(\'%s\',\'%s\',%d,\'%s\')' %(source.replace('\'','\'\''),destination.replace('\'','\'\''), conc_weights[i],t)
+        values.append(value)
+    values_str = ','.join(values)
+    query_adj = 'INSERT INTO concurrency_adjacency (source , destination, weight,type) VALUES %s RETURNING source' %(values_str)
+    print(query_adj)
+    cur = conn.cursor()
+    cur.execute(query_adj)  
+    output = cur.fetchone()    
+    conn.commit() 
     cur.close()
+    
     print("graph ok")
+    
     degree_cent = degreeCentrality(conc)
     print("degree ok")
     closeness_cent = closenessCentrality(conc)
     print("close ok")
     betweenness_cent = betweennesCentrality(conc)
     print("between ok")
+    
     try:
         eigenvector_cent = eigenvectorCentrality(conc)
         print("eigen ok")
     except:
+        print("eigen error")
         eigenvector_cent = []
     
-    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
-    
+    conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     del_query = 'DELETE FROM concurrency_indices where type=\'%s\''%(t)
     print(del_query)
     cur = conn.cursor()
     cur.execute(del_query)  
     conn.commit()
 
+    # Degree Centrality
+    values = []
     for node in degree_cent.keys():
         degree = degree_cent[node]
-        query_degree = 'INSERT INTO concurrency_indices (node , degree_centrality,type) VALUES (\'%s\',%f,\'%s\') RETURNING node' %(node.replace('\'','\'\''), degree,t)
-        print(query_degree)
-        cur = conn.cursor()
-        cur.execute(query_degree)  
-        output = cur.fetchone()    
-        conn.commit() 
+        value = '(\'%s\',%f,\'%s\')' %(node.replace('\'','\'\''), degree,t)
+        values.append(value)
+    values_str = ','.join(values)
+    query_degree = 'INSERT INTO concurrency_indices (node , degree_centrality,type) VALUES %s RETURNING node' %(values_str)
+    print(query_degree)
+    cur = conn.cursor()
+    cur.execute(query_degree)  
+    output = cur.fetchone()    
+    conn.commit() 
     cur.close()
-    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
 
+    # Betweenness Centrality
+    conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
+    values = [] 
     for node in betweenness_cent.keys():
         between = betweenness_cent[node]
-        query_between = 'INSERT INTO concurrency_indices (node , betweenness_centrality,type) VALUES (\'%s\',%f,\'%s\') RETURNING node' %(node.replace('\'','\'\''), between,t)
-        print(query_between)
-        cur = conn.cursor()
-        cur.execute(query_between)  
-        output = cur.fetchone()    
-        conn.commit() 
+        value = '(\'%s\',%f,\'%s\')' %(node.replace('\'','\'\''), between,t)
+        values.append(value)
+    values_str = ','.join(values)
+    query_between = 'INSERT INTO concurrency_indices (node , betweenness_centrality,type) VALUES %s RETURNING node' %(values_str)
+    print(query_between)
+    cur = conn.cursor()
+    cur.execute(query_between)  
+    output = cur.fetchone()    
+    conn.commit() 
     cur.close()
-    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
 
+    #Closeness Centrality
+    conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
+    values = []
     for node in closeness_cent.keys():
         close = closeness_cent[node]
-        query_closeness = 'INSERT INTO concurrency_indices (node , closeness_centrality,type) VALUES (\'%s\',%f,\'%s\') RETURNING node' %(node.replace('\'','\'\''), close,t)
-        print(query_closeness)
-        cur = conn.cursor()
-        cur.execute(query_closeness)  
-        output = cur.fetchone()    
-        conn.commit() 
+        value = '(\'%s\',%f,\'%s\')' %(node.replace('\'','\'\''), close,t)
+        values.append(value)
+    values_str = ','.join(values)
+    query_closeness = 'INSERT INTO concurrency_indices (node , closeness_centrality,type) VALUES %s RETURNING node' %(values_str)
+    print(query_closeness)
+    cur = conn.cursor()
+    cur.execute(query_closeness)  
+    output = cur.fetchone()    
+    conn.commit() 
     cur.close()
-    conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
 
-    try:
+    #Eigenvector Centrality
+    conn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
+    values = []
+    if eigenvector_cent != []:
         for node in eigenvector_cent.keys():
             eigen = eigenvector_cent[node]
-            query_eigen = 'INSERT INTO concurrency_indices (node , eigenvector_centrality,type) VALUES (\'%s\',%f,\'%s\') RETURNING node' %(node.replace('\'','\'\''), eigen,t)
-            print(query_eigen)
-            cur = conn.cursor()
-            cur.execute(query_eigen)  
-            output = cur.fetchone()    
-            conn.commit()
-    except:
-        pass
+            value = '(\'%s\',%f,\'%s\')' %(node.replace('\'','\'\''), eigen,t)
+            values.append(value)
+        values_str = ','.join(values)
+        query_eigen = 'INSERT INTO concurrency_indices (node , eigenvector_centrality,type) VALUES %s RETURNING node' %(values_str)
+        print(query_eigen)
+        cur = conn.cursor()
+        cur.execute(query_eigen)  
+        output = cur.fetchone()    
+        conn.commit()
     cur.close()
-
+    

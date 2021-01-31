@@ -16,6 +16,12 @@ from datetime import datetime
 from datetime import timedelta
 import snscrape.modules.twitter
 
+
+#####
+# SCRIPT THAT WAS USED TO COLLECT TWEET ID'S FROM SNSCRAPE AND POPULATE THE HEROKU DB WITH TWEET CONTENT FROM TWITTER API
+# RAN FOR A SINGLE TIME. NOT IN USE ANYMORE
+#####
+
 def listToDbString(inputList):
     if len(inputList) == 0:
         dbString = "null"
@@ -33,12 +39,11 @@ print(base)
 filename = base+"/CustomStopwords.txt"
 stopwords = Cleaner.getCustomStopwords(reference="custom", filename=filename)
 
-API_Key = "WNmf8Sn7lxTnv8DXXETH2rMt3"
-API_Secret_Key = "si9nsqctwXlrkCISATa9Tb4Rz8n50WneRIlrpvz710d9SPhI2p"
-Bearer_Token = "AAAAAAAAAAAAAAAAAAAAAEvlJgEAAAAATlgz0sdbprRgHkkU%2B0hVrF1jAKE%3DhX8F3CD6SxXBITywP9TbAYMjABQMLOnZfb7HUlWoa1jNVG5gBq"
-Access_Token = "251584559-knqwY4QZn8G6qmVUba2P9yJJ0aOhRPPMQj5yjjra"
-Access_Token_Secret = "lS2FkFXPLdmKMToCDY2BrLHOh6d3cJJVk0OUYjkgBxLjS"
-tagme.GCUBE_TOKEN = "24d4b5ec-ce55-4be2-a530-75f1d03fbc76-843339462"
+API_Key = os.environ['TWIITER_API_KEY']
+API_Secret_Key = os.environ['TWIITER_API_SECRET_KEY']
+Access_Token = os.environ['TWIITER_ACCESS_TOKEN']
+Access_Token_Secret = os.environ['TWIITER_ACCESS_TOKEN_SECRET']
+tagme.GCUBE_TOKEN = os.environ['TAGME_TOKEN']
 
 #Authenticate
 auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)
@@ -46,9 +51,8 @@ auth.set_access_token(Access_Token, Access_Token_Secret)
 api = tweepy.API(auth,wait_on_rate_limit=True,wait_on_rate_limit_notify=True)
 
 now = datetime.now()
-now = now - timedelta(days=250)
+#now = now - timedelta(days=250)
 p_d = now.strftime("%Y-%m-%d")
-#p_d = "2020-04-01"
 while p_d != "2020-01-01":
     print("*******************",p_d,"*******************")
     day_before = datetime.strptime(p_d,"%Y-%m-%d")
@@ -59,7 +63,7 @@ while p_d != "2020-01-01":
     day_after = day_after + timedelta(days=1)
     day_after_str = day_after.strftime("%Y-%m-%d")
 
-    dbconn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
+    dbconn = psycopg2.connect(os.environ['DATABASE_URL'],sslmode='require')
     curs = dbconn.cursor()
     query = 'SELECT COUNT(post_id) FROM twitter WHERE post_date = \'%s\'' %(p_d)
     curs.execute(query)  
@@ -78,8 +82,6 @@ while p_d != "2020-01-01":
             print(query)
             for tweet in snscrape.modules.twitter.TwitterSearchScraper(query).get_items():
                 tl = str(tweet).split('/')[-1]
-                #print(tl)
-                #print(tweet.content)
                 ids.append(tl)
                 if len(ids) >= missing:
                     break
@@ -92,7 +94,6 @@ while p_d != "2020-01-01":
                 if endIndex > len(ids):
                     endIndex = len(ids)
                     end = True
-                #conn = psycopg2.connect("postgres://xyaoonlajxbtxz:abf03651d79b90a5f194b86303a93037dedcb01544f920ff1635d7c1638d0e3c@ec2-18-208-49-190.compute-1.amazonaws.com:5432/d43c41soe9v55l",sslmode='require')
                 #cur = conn.cursor()
                 tweetContents = api.statuses_lookup(id_=ids[startIndex:endIndex],tweet_mode="extended")
                 for tw in tweetContents:

@@ -10,11 +10,16 @@ import json
 from datetime import datetime
 from datetime import timedelta
 from django.contrib.auth.decorators import login_required
-# Create your views here.
 
+####
+# VIEWS OF MAIN APPLICATION
+####
+
+# The generic error page
 def errorpage(request):
     return render(request, "main/Error.html",{})
 
+# The view for "This Week" Page
 @login_required(login_url='/user/login')
 def weekly(request):
     #try:
@@ -114,6 +119,7 @@ def weekly(request):
     #except:
     #return redirect("/error")
 
+# The view for the "Custom Search" Page, displays search inputs only
 @login_required(login_url='/user/login')
 def search(request):
     if request.method == "POST":
@@ -125,6 +131,7 @@ def search(request):
 
     return render(request, "main/Search.html",{})
 
+# The view for search results page
 @login_required(login_url='/user/login')
 def searchResults(request):
     try:

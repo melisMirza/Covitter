@@ -1,8 +1,10 @@
-# SWE573 Project
+# COVITTER ANALYSIS
 
-## Introduction
+Covitter Analysis is a COVID-19 analysis application on Twitter posts. It uses a stream of posts about COVID-19 collected at 10 minute intervals. On the application, analysis on sentiment, entity linking and co-occurancies are presented. 
 
-This repository contains my SWE 573 project. 
-It will be updated frequently. 
+You can access the application from .
 
-Details will soon be posted here...
+
+You may find the detailed documentation here.
+
+
