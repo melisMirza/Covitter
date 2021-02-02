@@ -2,7 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pandas as pd 
-import Analyzer, RetrieveTweets_schedule
+import Analyzer,RetrieveTweets
 import psycopg2, os
 
 ####
@@ -97,7 +97,7 @@ graph_types = ["entities","mentions","tags"]
 for t in graph_types:
 
     print("type:",t)
-    tweets = RetrieveTweets_schedule.getTweetDF(option="thisweek")
+    tweets = RetrieveTweets.getTweetDF(option="thisweek")
     conc = createUDWnetork(tweets,graph_content=t)
     conc_edges,conc_weights = zip(*nx.get_edge_attributes(conc,'weight').items())
     
