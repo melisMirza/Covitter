@@ -12,7 +12,7 @@ The application is readily available [here](https://covitter.herokuapp.com) and 
 -	Twitter developer account
 -	TagMe account
 -	News API account
--	A database url that contains the data explained the “System Design” section of the [project documentation](https://github.com/melisMirza/SWE573_project/blob/main/Covitter_ProjectReport.pdf) in the repository.
+-	A database url that contains the data explained the “System Design” section of the [project documentation](https://github.com/melisMirza/SWE573_project/blob/main/%5BSwe573_2020Fall%5D%5BFinal%20Project%20Report%5D%20Mirza%2C%20Merve%20Melis.pdf) in the repository.
 
 
 An .env file has to be created by filling the values in the .env-sample file in the repository. It is placed at the root of the repository with (or in place of) the sample file. After obtaining all environment variables, there are two ways to run and customize the code. 
