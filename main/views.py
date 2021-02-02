@@ -30,10 +30,10 @@ def weekly(request):
     news_from = from_date ; news_to = to_date
     tweets = RetrieveTweets.getTweetDF(option="thisweek")
     print(from_date, " - ", to_date)
-    print(tweets)
+    #print(tweets)
     ## Entities
     entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
-    print(entities)
+    #print(entities)
     
     ##network indices
     #graph_types are: 'mentions','entities','tags'
@@ -41,9 +41,9 @@ def weekly(request):
     concurreny_mentions = ConcurrenyNetwork.collectIndices("mentions")
     concurreny_hashtags = ConcurrenyNetwork.collectIndices("tags")
     concurreny_entities["title"] = ["Vertex","Index","Most Weighted Neighbours (weight)"]
-    print("ENTITY ADJ:",concurreny_entities["adjacency"])   
-    print("MENTIONS ADJ:",concurreny_mentions["adjacency"])   
-    print("HASHTAGS ADJ:",concurreny_hashtags["adjacency"])   
+    #print("ENTITY ADJ:",concurreny_entities["adjacency"])   
+    #print("MENTIONS ADJ:",concurreny_mentions["adjacency"])   
+    #print("HASHTAGS ADJ:",concurreny_hashtags["adjacency"])   
 
     
     #Hashtag table
@@ -56,10 +56,10 @@ def weekly(request):
 
     #Sentiments
     sentiments = json.dumps(RetrieveTweets.getSentimentResults(tweets))
-    print(sentiments)
+    #print(sentiments)
     ## Mentions
     mentions = json.dumps(Analyzer.getTopMentions(tweets['mentions']))
-    print(mentions)
+    #print(mentions)
 
     #News
     headlines = {"cnn":["No available news to display"],"breitbart":["No available news to display"],"washington":["No available news to display"]}
@@ -147,13 +147,13 @@ def searchResults(request):
             else:
                 tweets = RetrieveTweets.getTweetDF(option="custom",fromDate=from_date,toDate=to_date,searchwords=search_words.lower())
         
-        print("tweets:")
-        print(tweets)
+        #print("tweets:")
+        #print(tweets)
         totalPosts = len(tweets['orig_content'])
 
         ## Entities
         entities = json.dumps(Analyzer.getTopEntities(tweets['entities']))
-        print(entities)
+        #print(entities)
 
         
         #Hashtag table
@@ -166,10 +166,10 @@ def searchResults(request):
 
         #Sentiments
         sentiments = json.dumps(RetrieveTweets.getSentimentResults(tweets))
-        print(sentiments)
+        #print(sentiments)
         ## Mentions
         mentions = json.dumps(Analyzer.getTopMentions(tweets['mentions']))
-        print(mentions)
+        #print(mentions)
 
         #News
         headlines = {"cnn":["No available news to display"],"breitbart":["No available news to display"],"washington":["No available news to display"]}

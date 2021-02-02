@@ -12,7 +12,7 @@ ADD . /app/
 ENV PYTHONUNBUFFERED 1
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive 
-
+ENV TIMEOUT=180
 # set project environment variables
 # grab these via Python's os.environ
 # these are 100% optional here
@@ -39,4 +39,4 @@ RUN pip3 install pipenv
 RUN pipenv install --skip-lock --system --dev
 
 EXPOSE 8000
-CMD gunicorn CovitterAnalysis.wsgi:application --bind 0.0.0.0:$PORT
+CMD gunicorn CovitterAnalysis.wsgi:application --timeout $TIMEOUT --bind 0.0.0.0:$PORT
